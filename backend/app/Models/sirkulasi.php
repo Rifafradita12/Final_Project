@@ -9,7 +9,7 @@ class sirkulasi extends Model
     protected $table = 'sirkulasi';
 
     protected $fillable = [
-        'tglPinjam', 'tglKembali', 'status', 'buku_id', 'anggota_id', 'pengguna_id'
+        'tglPinjam', 'tglKembali', 'status', 'buku_id', 'anggota_id', 'users_id'
     ];
 
     public function buku() {
@@ -19,6 +19,6 @@ class sirkulasi extends Model
         return $this->belongsTo(anggota::class, 'anggota_id');
      }
      public function users() {
-        return $this->belongsTo(anggota::class, 'pengguna_id');
+        return $this->belongsTo(anggota::class, 'users_id');
      }
 }
