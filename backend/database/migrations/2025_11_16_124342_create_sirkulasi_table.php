@@ -18,7 +18,7 @@ return new class extends Migration
             $table->enum('status', ['pin', 'kem']);
             $table->foreignId('buku_id')->constrained('buku')->onDelete('cascade');
             $table->foreignId('anggota_id')->constrained('anggota')->onDelete('cascade');
-            $table->foreignId('pengguna_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('users_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

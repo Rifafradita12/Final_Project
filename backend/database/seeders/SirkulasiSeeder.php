@@ -19,7 +19,7 @@ class SirkulasiSeeder extends Seeder
             'status' => 'pin',
             'buku_id' => '1',
             'anggota_id' => '1',
-            'pengguna_id' => '1'
+            'users_id' => '1'
         ]);
     }
 }

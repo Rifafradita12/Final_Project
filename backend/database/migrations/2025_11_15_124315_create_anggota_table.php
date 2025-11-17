@@ -16,7 +16,7 @@ return new class extends Migration
             $table->text('nama');
             $table->enum('jekel', ['lakiLaki', 'perempuan']);
             $table->string('prodi');
-            $table->integer('noHP');
+            $table->string('noHP');
             $table->timestamps();
         });
     }
