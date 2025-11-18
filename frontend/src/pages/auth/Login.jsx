@@ -1,41 +1,86 @@
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./LoginForm.css";
 
-export default function Login() {
+function LoginForm() {
+    // Menyimpan data input user
+    const [user, setUser] = useState({ username: "", password: "" });
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
+
+    // Saat input berubah
+    const handleChange = (e) => {
+        setUser({ ...user, [e.target.name]: e.target.value });
+    };
+
+    // Saat tombol login diklik
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        // Validasi sederhana
+        if (!user.username || !user.password) {
+            setError("Semua kolom wajib diisi!");
+            return;
+        }
+
+        // Simulasi login (ganti nanti dengan backend API)
+        if (user.username === "admin" && user.password === "123456") {
+            localStorage.setItem("role", "admin");
+            navigate("/admin"); // ke halaman admin
+        } else if (user.username === "user" && user.password === "12345") {
+            localStorage.setItem("role", "user");
+            navigate("/"); // ke halaman utama
+        } else {
+            setError("Username atau password salah!");
+        }
+    };
+
     return (
-        <>
-            <div class="modal modal-sheet position-static d-block p-4 py-md-5 item-center" tabindex="-1" role="dialog"
-                id="modalSignin">
-                <div className="modal-dialog">
-                    <div className="modal-content rounded-4 shadow">
-                        <div className="modal-header p-5 pb-4 border-bottom-0 d-flex justify-content-center">
-                            <h1 className="fw-bold mb-0 fs-2">Login</h1> 
-                        </div>
-                        <div className="modal-body p-5 pt-0">
-                            <form className="">
-                                <div className="form-floating mb-3"> <input type="email" className="form-control rounded-3"
-                                    id="floatingInput" placeholder="name@example.com"/> <label for="floatingInput">Email address</label> </div>
-                                <div className="form-floating mb-3"> <input type="password" className="form-control rounded-3"
-                                    id="floatingPassword" placeholder="Password"/> <label
-                                        for="floatingPassword">Password</label> </div> 
-                                        <button
-                                            className="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Login</button> 
-                                            
-                                    <h2 className="fs-5 fw-bold mb-3">Atau gunakan pihak ketiga</h2> <button
-                                        className="w-100 py-2 mb-2 btn btn-outline-secondary rounded-3" type="submit"> 
-                                        Masuk Menggunakan Google
-                                    </button> <button className="w-100 py-2 mb-2 btn btn-outline-primary rounded-3" type="submit"> 
-                                    
-                                        Masuk Menggunakan Facebook
-                                    </button> <button className="w-100 py-2 mb-2 btn btn-outline-secondary rounded-3" type="submit">
-                                        
-                                        Masuk Menggunakan GitHub
-                                    </button>
-                            </form>
-                            <p>Belum Memiliki Akun? <Link to="/register">Register</Link></p>
-                        </div>
+        <div className="login-page">
+            <div className="login-box">
+                <h2>Masuk ke Akun Anda</h2>
+
+                <form onSubmit={handleSubmit}>
+                    {/* Input Username */}
+                    <div className="input-group">
+                        <label>Username</label>
+                        <input
+                            type="text"
+                            name="username"
+                            placeholder="Masukkan username"
+                            value={user.username}
+                            onChange={handleChange}
+                        />
                     </div>
-                </div>
+
+                    {/* Input Password */}
+                    <div className="input-group">
+                        <label>Password</label>
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Masukkan password"
+                            value={user.password}
+                            onChange={handleChange}
+                        />
+                    </div>
+
+
+                    <button type="submit" className="btn-login">
+                        Login
+                    </button>
+                </form>
+
+
+                {error && <p className="error">{error}</p>}
+
+
+                <p className="register-link">
+                    Belum punya akun? <a href="/register">Daftar Sekarang</a>
+                </p>
             </div>
-        </>
-    )
+        </div>
+    );
 }
+
+export default LoginForm;
