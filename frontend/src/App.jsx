@@ -4,6 +4,10 @@ import Register from "./pages/auth/Register.jsx";
 
 import AdminLayout from "./components/shared/AdminLayout.jsx";
 import ProtectedRoute from "./components/shared/ProtectedRoute.jsx";
+import Sirkulasi from "./pages/admin/Sirkulasi.jsx";
+import Users from "./pages/users/Users.jsx";
+import Denda from "./pages/admin/Denda.jsx";
+import Kategori from "./pages/admin/Kategori.jsx";
 
 export default function App() {
   return (
@@ -14,6 +18,7 @@ export default function App() {
         <Route path="/" element={<LoginForm />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/users" element={<Users />} />
 
         {/* ADMIN */}
         <Route
@@ -24,7 +29,9 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-
+        <Route path="/admin/sirkulasi" element={<Sirkulasi />} />
+        <Route path="/admin/denda" element={<Denda />} />
+        <Route path="/admin/kategori" element={<Kategori />} />
       </Routes>
     </BrowserRouter>
   );
