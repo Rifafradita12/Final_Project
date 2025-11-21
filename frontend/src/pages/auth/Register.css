@@ -14,11 +14,12 @@
    Kotak Formulir
 ========================== */
 .register-box {
+    margin: 20px;
     background: #fff;
     padding: 2.5rem;
     border-radius: 1.2rem;
     width: 100%;
-    max-width: 420px;
+    max-width: 380px;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     text-align: center;
     animation: fadeIn 0.8s ease-in-out;
