@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\peminjaman;
+use App\Models\denda;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class PeminjamanController extends Controller
+class DendaController extends Controller
 {
      public function index() {
-        $peminjaman = peminjaman::with('buku', 'anggota')->get();
+        $denda = denda::all();
 
-        if ($peminjaman->isEmpty()) {
+        if ($denda->isEmpty()) {
             return response()->json([
                 "succes" => true,
                 "message" => "Resource data not found!"
@@ -21,14 +21,13 @@ class PeminjamanController extends Controller
         return response()->json([
             "success" => true,
             "message" => "get all resources",
-            "data" => $peminjaman
+            "data" => $denda
         ], 200);
     }
     public function store (Request $request) {
         $validator = Validator::make ($request->all(),[
-            'tglPeminjaman' => 'required|string',
-            'buku_id' => 'required|exists:buku,id',
-            'anggota_id' => 'required|exists:anggota,id'
+            'jumlah' => 'required|string',
+            'statusBayar' => 'required|in:lunas,belumBayar'
         ]);
 
         if ($validator->fails()) {
@@ -38,23 +37,22 @@ class PeminjamanController extends Controller
             ], 422);
         }
 
-        $peminjaman = peminjaman::create([
-            'tglPeminjaman' => $request->tglPeminjaman,
-            'buku_id' => $request->buku_id,
-            'anggota_id' => $request->anggota_id
+        $denda = denda::create([
+            'jumlah' => $request->jumlah,
+            'statusBayar' => $request->statusBayar
         ]);
 
         return response()->json([
             'success' => true,
             'message' => 'Resource added succes!',
-            'data' => $peminjaman
+            'data' => $denda
         ], 201);
     }
 
     public function show (string $id) {
-        $peminjaman = peminjaman::with('buku', 'anggota')->find($id);
+        $denda = denda::find($id);
 
-        if (!$peminjaman) {
+        if (!$denda) {
             return response()->json([
                 'success'=>false,
                 'message'=>'Resource not found!'
@@ -64,14 +62,14 @@ class PeminjamanController extends Controller
         return response()->json([
             'success'=>true,
             'message'=>'Get detail resource',
-            'data'=>$peminjaman
+            'data'=>$denda
         ], 200);
     }
 
     public function update (string $id, Request $request) {
-        $peminjaman = peminjaman::find($id);
+        $denda = denda::find($id);
 
-        if (!$peminjaman) {
+        if (!$denda) {
             return response()->json([
                 'success'=>false,
                 'message'=>'Resource not found!'
@@ -79,9 +77,8 @@ class PeminjamanController extends Controller
         }
 
         $validator = Validator::make ($request->all(),[
-            'tglPeminjaman' => 'required|string',
-            'buku_id' => 'required|exists:buku,id',
-            'anggota_id' => 'required|exists:anggota,id'
+            'jumlah' => 'required|string',
+            'statusBayar' => 'required|in:lunas,belumBayar'
         ]);
 
         if ($validator->fails()) {
@@ -92,31 +89,30 @@ class PeminjamanController extends Controller
         }
 
         $data = [
-            'tglPeminjaman' => $request->tglPeminjaman,
-            'buku_id' => $request->buku_id,
-            'anggota_id' => $request->anggota_id
+            'jumlah' => $request->jumlah,
+            'statusBayar' => $request->statusBayar
         ];
 
-        $peminjaman->update($data);
+        $denda->update($data);
 
         return response()->json([
             'success' => true,
             'message' => 'Resource updated succes!',
-            'data' => $peminjaman
+            'data' => $denda
         ], 200);
     }
 
     public function destroy (string $id) {
-        $peminjaman = peminjaman::find($id);
+        $denda = denda::find($id);
 
-        if (!$peminjaman) {
+        if (!$denda) {
             return response()->json([
                 'success'=>false,
                 'message'=>'Resource not found!'
             ], 404);
         }
 
-        $peminjaman->delete();
+        $denda->delete();
 
         return response()->json([
             'success'=>true,

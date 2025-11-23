@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\buku;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class BukuController extends Controller
 {
     public function index() {
-        $buku = buku::all();
+        $buku = buku::with('kategori')->get();
 
         if ($buku->isEmpty()) {
             return response()->json([
@@ -29,7 +30,10 @@ class BukuController extends Controller
             'judulBuku' => 'required|string',
             'pengarang' => 'required|string',
             'penerbit' => 'required|string',
-            'thTerbit' => 'required|digits:4'
+            'thTerbit' => 'required|digits:4',
+            'foto' => 'required|image|mimes:jpg,jpeg,png',
+            'stok' => 'required|integer',
+            'kategori_id' => 'required|exists:kategori,id'
         ]);
 
         if ($validator->fails()) {
@@ -39,11 +43,17 @@ class BukuController extends Controller
             ], 422);
         }
 
+        $image = $request->file('foto');
+        $image->store('buku', 'public');
+
         $buku = buku::create([
             'judulBuku' => $request->judulBuku,
             'pengarang' => $request->pengarang,
             'penerbit' => $request->penerbit,
-            'thTerbit' => $request->thTerbit
+            'thTerbit' => $request->thTerbit,
+            'foto' => $image->hashName(),
+            'stok' => $request->stok,
+            'kategori_id' => $request->kategori_id
         ]);
 
         return response()->json([
@@ -54,7 +64,7 @@ class BukuController extends Controller
     }
 
     public function show (string $id) {
-        $buku = buku::find($id);
+        $buku = buku::with('kategori')->find($id);
 
         if (!$buku) {
             return response()->json([
@@ -84,7 +94,10 @@ class BukuController extends Controller
             'judulBuku' => 'required|string',
             'pengarang' => 'required|string',
             'penerbit' => 'required|string',
-            'thTerbit' => 'required|digits:4'
+            'thTerbit' => 'required|digits:4',
+            'foto' => 'required|image|mimes:jpg,jpeg,png',
+            'stok' => 'required|integer',
+            'kategori_id' => 'required|exists:kategori,id'
         ]);
 
         if ($validator->fails()) {
@@ -98,8 +111,21 @@ class BukuController extends Controller
             'judulBuku' => $request->judulBuku,
             'pengarang' => $request->pengarang,
             'penerbit' => $request->penerbit,
-            'thTerbit' => $request->thTerbit
+            'thTerbit' => $request->thTerbit,
+            'stok' => $request->stok,
+            'kategori_id' => $request->kategori_id
         ];
+
+        if ($request->hasFile('foto')) {
+            $image = $request->file('foto');
+            $image->store('buku', 'public');
+
+            if ($buku->foto) {
+                Storage::disk('public')->delete('buku/'. $buku->foto);
+            }
+
+            $data['foto'] = $image->hashName();
+        }
 
         $buku->update($data);
 

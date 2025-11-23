@@ -17,9 +17,9 @@ class SirkulasiSeeder extends Seeder
             'tglPinjam' => '2025-09-22',
             'tglKembali' => '2025-09-30',
             'status' => 'pin',
+            'tglTempo' => '2025-09-29',
             'buku_id' => '1',
-            'anggota_id' => '1',
-            'users_id' => '1'
+            'denda_id' => '1'
         ]);
     }
 }

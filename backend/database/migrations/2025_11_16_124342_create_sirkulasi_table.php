@@ -16,9 +16,9 @@ return new class extends Migration
             $table->date('tglPinjam');
             $table->date('tglKembali');
             $table->enum('status', ['pin', 'kem']);
+            $table->date('tglTempo');
             $table->foreignId('buku_id')->constrained('buku')->onDelete('cascade');
-            $table->foreignId('anggota_id')->constrained('anggota')->onDelete('cascade');
-            $table->foreignId('users_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('denda_id')->constrained('denda')->onDelete('cascade');
             $table->timestamps();
         });
     }

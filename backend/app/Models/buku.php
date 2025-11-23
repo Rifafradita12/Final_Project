@@ -9,6 +9,9 @@ class buku extends Model
     protected $table = 'buku';
 
     protected $fillable = [
-        'judulBuku', 'pengarang', 'penerbit', 'thTerbit'
+        'judulBuku', 'pengarang', 'penerbit', 'thTerbit', 'foto', 'stok', 'kategori_id'
     ];
+    public function kategori() {
+        return $this->belongsTo(kategori::class, 'kategori_id');
+    }
 }

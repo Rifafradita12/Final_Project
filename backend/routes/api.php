@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\AnggotaController;
+
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BukuController;
-use App\Http\Controllers\PeminjamanController;
+use App\Http\Controllers\DendaController;
+use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\SirkulasiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -13,8 +14,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::apiResource('/buku', BukuController::class);
-Route::apiResource('/anggota', AnggotaController::class);
-Route::apiResource('/peminjaman', PeminjamanController::class);
+Route::apiResource('/denda', DendaController::class);
+Route::apiResource('/kategori', KategoriController::class);
 Route::apiResource('/sirkulasi', SirkulasiController::class);
 
 Route::post('/register', [AuthController::class, 'register']);

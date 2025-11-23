@@ -17,7 +17,10 @@ class BukuSeeder extends Seeder
             'judulBuku' => 'Ayah',
             'pengarang' => 'Mail',
             'penerbit' => 'Gramedia',
-            'thTerbit' =>  '2025'
+            'thTerbit' =>  '2025',
+            'foto' => 'ayah.jpg',
+            'stok' => '20',
+            'kategori_id' => '1'
         ]);
     }
 }

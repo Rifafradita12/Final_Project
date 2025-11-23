@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 class SirkulasiController extends Controller
 {
      public function index() {
-        $sirkulasi = sirkulasi::with('buku', 'anggota', 'users')->get();
+        $sirkulasi = sirkulasi::with('buku', 'denda')->get();
 
         if ($sirkulasi->isEmpty()) {
             return response()->json([
@@ -26,12 +26,12 @@ class SirkulasiController extends Controller
     }
     public function store (Request $request) {
         $validator = Validator::make ($request->all(),[
-            'tglPinjam' => 'required|string',
-            'tglKembali' => 'required|string',
+            'tglPinjam' => 'required|date',
+            'tglKembali' => 'required|date',
             'status' => 'required|in:pin,kem',
+            'tglTempo' => 'required|date',
             'buku_id' => 'required|exists:buku,id',
-            'anggota_id' => 'required|exists:anggota,id',
-            'users_id' => 'required|exists:users,id'
+            'denda_id' => 'required|exists:denda,id'
         ]);
 
         if ($validator->fails()) {
@@ -45,9 +45,9 @@ class SirkulasiController extends Controller
             'tglPinjam' => $request->tglPinjam,
             'tglKembali' => $request->tglKembali,
             'status' => $request->status,
+            'tglTempo' => $request->tglTempo,
             'buku_id' => $request->buku_id,
-            'anggota_id' => $request->anggota_id,
-            'users_id' => $request->users_id
+            'denda_id' => $request->denda_id
         ]);
 
         return response()->json([
@@ -58,7 +58,7 @@ class SirkulasiController extends Controller
     }
 
     public function show (string $id) {
-        $sirkulasi = sirkulasi::with('buku', 'anggota', 'users')->find($id);
+        $sirkulasi = sirkulasi::with('buku', 'denda')->find($id);
 
         if (!$sirkulasi) {
             return response()->json([
@@ -85,12 +85,12 @@ class SirkulasiController extends Controller
         }
 
         $validator = Validator::make ($request->all(),[
-            'tglPinjam' => 'required|string',
-            'tglKembali' => 'required|string',
+            'tglPinjam' => 'required|date',
+            'tglKembali' => 'required|date',
             'status' => 'required|in:pin,kem',
+            'tglTempo' => 'required|date',
             'buku_id' => 'required|exists:buku,id',
-            'anggota_id' => 'required|exists:anggota,id',
-            'users_id' => 'required|exists:users,id'
+            'denda_id' => 'required|exists:denda,id'
         ]);
 
         if ($validator->fails()) {
@@ -104,9 +104,9 @@ class SirkulasiController extends Controller
             'tglPinjam' => $request->tglPinjam,
             'tglKembali' => $request->tglKembali,
             'status' => $request->status,
+            'tglTempo' => $request->tglTempo,
             'buku_id' => $request->buku_id,
-            'anggota_id' => $request->anggota_id,
-            'users_id' => $request->users_id
+            'denda_id' => $request->denda_id
         ];
 
         $sirkulasi->update($data);

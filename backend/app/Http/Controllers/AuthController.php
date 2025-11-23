@@ -12,8 +12,12 @@ class AuthController extends Controller
 {
     public function register(Request $request) {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'nama' => 'required|string|max:255',
+            'jekel' => 'required|in:lakiLaki,perempuan',
+            'prodi' => 'required|string',
             'email' => 'required|string|unique:users',
+            'noHP' => 'required|string',
+            'role' => 'required|in:admin,anggota',
             'password' => 'required|min:8'
         ]);
 
@@ -22,8 +26,12 @@ class AuthController extends Controller
         }
 
         $user = User::create([
-            'name' => $request->name,
+            'nama' => $request->nama,
+            'jekel' => $request->jekel,
+            'prodi' => $request->prodi,
             'email' => $request->email,
+            'noHP' => $request->noHP,
+            'role' => $request->role,
             'password' => bcrypt($request->password)
         ]);
 

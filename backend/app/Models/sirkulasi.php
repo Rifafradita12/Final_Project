@@ -9,16 +9,13 @@ class sirkulasi extends Model
     protected $table = 'sirkulasi';
 
     protected $fillable = [
-        'tglPinjam', 'tglKembali', 'status', 'buku_id', 'anggota_id', 'users_id'
+        'tglPinjam', 'tglKembali', 'status', 'tglTempo', 'buku_id', 'denda_id',
     ];
 
     public function buku() {
         return $this->belongsTo(buku::class, 'buku_id');
      }
-     public function anggota() {
-        return $this->belongsTo(anggota::class, 'anggota_id');
-     }
-     public function users() {
-        return $this->belongsTo(anggota::class, 'users_id');
+     public function denda() {
+        return $this->belongsTo(denda::class, 'denda_id');
      }
 }

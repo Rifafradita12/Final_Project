@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\anggota;
+use App\Models\kategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class AnggotaController extends Controller
+class KategoriController extends Controller
 {
      public function index() {
-        $anggota = anggota::all();
+        $kategori = kategori::all();
 
-        if ($anggota->isEmpty()) {
+        if ($kategori->isEmpty()) {
             return response()->json([
                 "succes" => true,
                 "message" => "Resource data not found!"
@@ -21,15 +21,12 @@ class AnggotaController extends Controller
         return response()->json([
             "success" => true,
             "message" => "get all resources",
-            "data" => $anggota
+            "data" => $kategori
         ], 200);
     }
     public function store (Request $request) {
         $validator = Validator::make ($request->all(),[
             'nama' => 'required|string',
-            'jekel' => 'required|in:lakiLaki,perempuan',
-            'prodi' => 'required|string',
-            'noHP' => 'required|string'
         ]);
 
         if ($validator->fails()) {
@@ -39,24 +36,21 @@ class AnggotaController extends Controller
             ], 422);
         }
 
-        $anggota = anggota::create([
-            'nama' => $request->nama,
-            'jekel' => $request->jekel,
-            'prodi' => $request->prodi,
-            'noHP' => $request->noHP
+        $kategori = kategori::create([
+            'nama' => $request->nama
         ]);
 
         return response()->json([
             'success' => true,
             'message' => 'Resource added succes!',
-            'data' => $anggota
+            'data' => $kategori
         ], 201);
     }
 
     public function show (string $id) {
-        $anggota = anggota::find($id);
+        $kategori = kategori::find($id);
 
-        if (!$anggota) {
+        if (!$kategori) {
             return response()->json([
                 'success'=>false,
                 'message'=>'Resource not found!'
@@ -66,14 +60,14 @@ class AnggotaController extends Controller
         return response()->json([
             'success'=>true,
             'message'=>'Get detail resource',
-            'data'=>$anggota
+            'data'=>$kategori
         ], 200);
     }
 
     public function update (string $id, Request $request) {
-        $anggota = anggota::find($id);
+        $kategori = kategori::find($id);
 
-        if (!$anggota) {
+        if (!$kategori) {
             return response()->json([
                 'success'=>false,
                 'message'=>'Resource not found!'
@@ -81,10 +75,7 @@ class AnggotaController extends Controller
         }
 
         $validator = Validator::make ($request->all(),[
-            'nama' => 'required|string',
-            'jekel' => 'required|in:lakiLaki,perempuan',
-            'prodi' => 'required|string',
-            'noHP' => 'required|string'
+            'nama' => 'required|string'
         ]);
 
         if ($validator->fails()) {
@@ -95,32 +86,29 @@ class AnggotaController extends Controller
         }
 
         $data = [
-            'nama' => $request->nama,
-            'jekel' => $request->jekel,
-            'prodi' => $request->prodi,
-            'noHP' => $request->noHP
+            'nama' => $request->nama
         ];
 
-        $anggota->update($data);
+        $kategori->update($data);
 
         return response()->json([
             'success' => true,
             'message' => 'Resource updated succes!',
-            'data' => $anggota
+            'data' => $kategori
         ], 200);
     }
 
     public function destroy (string $id) {
-        $anggota = anggota::find($id);
+        $kategori = kategori::find($id);
 
-        if (!$anggota) {
+        if (!$kategori) {
             return response()->json([
                 'success'=>false,
                 'message'=>'Resource not found!'
             ], 404);
         }
 
-        $anggota->delete();
+        $kategori->delete();
 
         return response()->json([
             'success'=>true,
