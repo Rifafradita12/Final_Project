@@ -28,10 +28,11 @@ export default function App() {
               <AdminLayout />
             </ProtectedRoute>
           }
-        />
-        <Route path="/admin/sirkulasi" element={<Sirkulasi />} />
-        <Route path="/admin/denda" element={<Denda />} />
-        <Route path="/admin/kategori" element={<Kategori />} />
+        >
+          <Route path="sirkulasi" element={<Sirkulasi />} />
+          <Route path="buku" element={<Denda />} />
+          <Route path="perpustakaan" element={<Kategori />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

@@ -21,12 +21,13 @@ function LoginForm() {
         }
 
         try {
-            const res = await login(user); 
-            const data = res.data;
+            const data = await login(user);
 
+            // simpan user & token sesuai backend
             localStorage.setItem("user", JSON.stringify(data.user));
             localStorage.setItem("token", data.token);
-            console.log(localStorage.getItem('user'))
+
+            console.log(localStorage.getItem('user'));
 
             if (data.user.role === "admin") {
                 navigate("/admin");
@@ -39,6 +40,7 @@ function LoginForm() {
             setError("Email atau password salah!");
         }
     };
+
 
     return (
         <div className="login-page">
