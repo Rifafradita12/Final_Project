@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 
 class KategoriController extends Controller
 {
-     public function index() {
+    public function index() {
         $kategori = kategori::all();
 
         if ($kategori->isEmpty()) {

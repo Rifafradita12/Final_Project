@@ -1,5 +1,4 @@
-import { useJwt } from "react-jwt";
-import { API } from "../_api";
+import api from "../_api";
 
 export const login = async ({ email, password }) => {
     try {
@@ -40,35 +39,3 @@ export const register = async ({ name, username, email, password }) => {
         throw error;
     }
 };
-
-
-
-
-
-
-export const useDecodeToken = (token) => {
-    const { decodedToken, isExpired } = useJwt(token);
-
-    try {
-        if (isExpired) {
-            return {
-                success: false,
-                message: "Token expired",
-                data: null
-            }
-        }
-
-        return {
-            success: true,
-            message: "Token valid",
-            data: decodedToken
-        }
-
-    } catch (error) {
-        return {
-            success: false,
-            message: error.message,
-            data: null
-        }
-    }
-}

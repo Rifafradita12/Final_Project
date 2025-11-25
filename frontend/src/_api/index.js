@@ -3,7 +3,7 @@ import axios from "axios";
 const url = "http://127.0.0.1:8000";
 
 // Buat satu instance axios saja
-const api = axios.create({
+const API = axios.create({
     baseURL: `${url}/api`,
 });
 
@@ -11,4 +11,4 @@ const api = axios.create({
 export const bookImageStorage = `${url}/storage`;
 
 // Export default untuk semua service
-export default api;
+export default API;

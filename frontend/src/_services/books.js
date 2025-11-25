@@ -8,7 +8,7 @@ export const getBooks = async () => {
 export const createBook = async (data) => {
     try {
         const response = await API.post("/books", data)
-        return response.data
+        return respons.data
     } catch (error) {
         console.log(error);
         throw error

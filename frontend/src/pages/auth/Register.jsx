@@ -1,51 +1,59 @@
 import React, { useState } from "react";
+import { register } from "../../_services/auth";
 import "./Register.css";
 
 function Register() {
-    // Data yang diinput oleh pengguna
     const [form, setForm] = useState({
-        nama: "",
+        name: "",
         email: "",
-        username: "",
         password: "",
     });
 
-    // Pesan sukses setelah registrasi berhasil
     const [pesan, setPesan] = useState("");
-
-    // Menyimpan pesan error per input
     const [error, setError] = useState({});
+    const [loading, setLoading] = useState(false);
 
-    // Menangani perubahan setiap input
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm({ ...form, [name]: value });
     };
 
-    // Menangani tombol submit
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setPesan("");
+        setError({});
+        setLoading(true);
+
         const newError = {};
 
-        // Validasi sederhana untuk tiap field
-        if (!form.nama.trim()) newError.nama = "Nama tidak boleh kosong";
+        if (!form.name.trim()) newError.name = "Nama tidak boleh kosong";
         if (!form.email.trim()) newError.email = "Email wajib diisi";
         else if (!/\S+@\S+\.\S+/.test(form.email))
             newError.email = "Format email tidak valid";
-        if (!form.username.trim()) newError.username = "Username wajib diisi";
         if (!form.password.trim()) newError.password = "Password wajib diisi";
-        else if (form.password.length < 6)
-            newError.password = "Password minimal 6 karakter";
+        else if (form.password.length < 8)
+            newError.password = "Password minimal 8 karakter";
 
-        setError(newError);
+        if (Object.keys(newError).length > 0) {
+            setError(newError);
+            setLoading(false);
+            return;
+        }
 
-        // Jika tidak ada error, tampilkan pesan sukses
-        if (Object.keys(newError).length === 0) {
-            console.log("Data tersimpan:", form);
+        try {
+            const res = await register(form);
+            console.log("REGISTER RESPONSE:", res);
+
             setPesan("Registrasi berhasil! Silakan login.");
-            setForm({ nama: "", email: "", username: "", password: "" });
-        } else {
-            setPesan("");
+            setForm({ name: "", email: "", password: "" });
+        } catch (err) {
+            if (err.response?.status === 422) {
+                setError(err.response.data); // tampilkan error Laravel
+            } else {
+                alert("Terjadi kesalahan server.");
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -54,19 +62,18 @@ function Register() {
             <div className="register-box">
                 <h2>Daftar Akun Baru</h2>
 
-                {/* Formulir Registrasi */}
                 <form onSubmit={handleSubmit}>
-                    {/* Nama Lengkap */}
+                    {/* Nama */}
                     <div className="input-group">
                         <label>Nama Lengkap</label>
                         <input
                             type="text"
-                            name="nama"
-                            value={form.nama}
+                            name="name"
+                            value={form.name}
                             onChange={handleChange}
-                            placeholder="Masukkan nama lengkap"
+                            placeholder="Masukkan nama"
                         />
-                        {error.nama && <p className="error">{error.nama}</p>}
+                        {error.name && <p className="error">{error.name}</p>}
                     </div>
 
                     {/* Email */}
@@ -82,19 +89,6 @@ function Register() {
                         {error.email && <p className="error">{error.email}</p>}
                     </div>
 
-                    {/* Username */}
-                    <div className="input-group">
-                        <label>Username</label>
-                        <input
-                            type="text"
-                            name="username"
-                            value={form.username}
-                            onChange={handleChange}
-                            placeholder="Buat username"
-                        />
-                        {error.username && <p className="error">{error.username}</p>}
-                    </div>
-
                     {/* Password */}
                     <div className="input-group">
                         <label>Password</label>
@@ -103,18 +97,18 @@ function Register() {
                             name="password"
                             value={form.password}
                             onChange={handleChange}
-                            placeholder="Minimal 6 karakter"
+                            placeholder="Minimal 8 karakter"
                         />
                         {error.password && <p className="error">{error.password}</p>}
                     </div>
 
-                    <button type="submit">Daftar</button>
+                    <button type="submit" disabled={loading}>
+                        {loading ? "Memproses..." : "Daftar"}
+                    </button>
                 </form>
 
-                {/* Pesan sukses */}
                 {pesan && <p className="success">{pesan}</p>}
 
-                {/* Link ke halaman Register */}
                 <p className="register-link">
                     Sudah punya akun? <a href="/login">Login</a>
                 </p>

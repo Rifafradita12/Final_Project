@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 
 class DendaController extends Controller
 {
-     public function index() {
+    public function index() {
         $denda = denda::all();
 
         if ($denda->isEmpty()) {

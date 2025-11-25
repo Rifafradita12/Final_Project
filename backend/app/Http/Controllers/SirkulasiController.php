@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 
 class SirkulasiController extends Controller
 {
-     public function index() {
+    public function index() {
         $sirkulasi = sirkulasi::with('buku', 'denda')->get();
 
         if ($sirkulasi->isEmpty()) {

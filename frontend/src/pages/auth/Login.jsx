@@ -1,37 +1,42 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./LoginForm.css";
+import { login } from "../../_services/auth";
 
 function LoginForm() {
-    // Menyimpan data input user
-    const [user, setUser] = useState({ username: "", password: "" });
+    const [user, setUser] = useState({ email: "", password: "" });
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
-    // Saat input berubah
     const handleChange = (e) => {
         setUser({ ...user, [e.target.name]: e.target.value });
     };
 
-    // Saat tombol login diklik
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Validasi sederhana
-        if (!user.username || !user.password) {
+        if (!user.email || !user.password) {
             setError("Semua kolom wajib diisi!");
             return;
         }
 
-        // Simulasi login (ganti nanti dengan backend API)
-        if (user.username === "admin" && user.password === "123456") {
-            localStorage.setItem("role", "admin");
-            navigate("/admin"); // ke halaman admin
-        } else if (user.username === "user" && user.password === "12345") {
-            localStorage.setItem("role", "user");
-            navigate("/"); // ke halaman utama
-        } else {
-            setError("Username atau password salah!");
+        try {
+            const res = await login(user); 
+            const data = res.data;
+
+            localStorage.setItem("user", JSON.stringify(data.user));
+            localStorage.setItem("token", data.token);
+            console.log(localStorage.getItem('user'))
+
+            if (data.user.role === "admin") {
+                navigate("/admin");
+            } else if (data.user.role === "anggota") {
+                navigate("/user");
+            } else {
+                setError("Role tidak dikenali!");
+            }
+        } catch (err) {
+            setError("Email atau password salah!");
         }
     };
 
@@ -41,19 +46,17 @@ function LoginForm() {
                 <h2>Masuk ke Akun Anda</h2>
 
                 <form onSubmit={handleSubmit}>
-                    {/* Input Username */}
                     <div className="input-group">
-                        <label>Username</label>
+                        <label>Email</label>
                         <input
-                            type="text"
-                            name="username"
-                            placeholder="Masukkan username"
-                            value={user.username}
+                            type="email"
+                            name="email"
+                            placeholder="Masukkan email"
+                            value={user.email}
                             onChange={handleChange}
                         />
                     </div>
 
-                    {/* Input Password */}
                     <div className="input-group">
                         <label>Password</label>
                         <input
@@ -65,15 +68,12 @@ function LoginForm() {
                         />
                     </div>
 
-
                     <button type="submit" className="btn-login">
                         Login
                     </button>
                 </form>
 
-
                 {error && <p className="error">{error}</p>}
-
 
                 <p className="register-link">
                     Belum punya akun? <a href="/register">Daftar Sekarang</a>
