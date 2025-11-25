@@ -8,6 +8,8 @@ import Sirkulasi from "./pages/admin/Sirkulasi.jsx";
 import Users from "./pages/users/Users.jsx";
 import Denda from "./pages/admin/Denda.jsx";
 import Kategori from "./pages/admin/Kategori.jsx";
+import Landing from "./pages/landing";
+
 
 export default function App() {
   return (
@@ -15,7 +17,7 @@ export default function App() {
       <Routes>
 
         {/* Public */}
-        <Route path="/" element={<LoginForm />} />
+        <Route path="/" element={<Landing />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<Register />} />
         <Route path="/users" element={<Users />} />
