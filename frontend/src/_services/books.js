@@ -1,14 +1,14 @@
-import { API } from "../_api/index"
+import API from "../_api/index"
 
 export const getBooks = async () => {
-    const { data } = await API.get("/books")
+    constdata = await API.get("/buku")
     return data.data;
 };
 
 export const createBook = async (data) => {
     try {
         const response = await API.post("/books", data)
-        return respons.data
+        return response.data
     } catch (error) {
         console.log(error);
         throw error
