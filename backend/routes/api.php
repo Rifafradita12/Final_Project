@@ -17,6 +17,7 @@ Route::apiResource('/buku', BukuController::class);
 Route::apiResource('/denda', DendaController::class);
 Route::apiResource('/kategori', KategoriController::class);
 Route::apiResource('/sirkulasi', SirkulasiController::class);
+Route::apiResource('/user', AuthController::class);
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);

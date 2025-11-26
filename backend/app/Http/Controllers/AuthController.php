@@ -10,6 +10,22 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
+     public function index() {
+        $user = User::all();
+
+        if ($user->isEmpty()) {
+            return response()->json([
+                "succes" => true,
+                "message" => "Resource data not found!"
+            ], 200);
+        };
+
+        return response()->json([
+            "success" => true,
+            "message" => "get all resources",
+            "data" => $user
+        ], 200);
+    }
     public function register(Request $request) {
         $validator = Validator::make($request->all(), [
             'nama' => 'required|string|max:255',
