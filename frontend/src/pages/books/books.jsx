@@ -23,7 +23,7 @@ export default function Books() {
             <table border="1" width="100%" cellPadding="10">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>NO</th>
                         <th>Judul</th>
                         <th>Pengarang</th>
                         <th>Penerbit</th>

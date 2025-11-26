@@ -3,6 +3,7 @@ import LoginForm from "./pages/auth/Login.jsx";
 import Register from "./pages/auth/Register.jsx";
 
 import AdminLayout from "./components/shared/AdminLayout.jsx";
+import UserLayout from "./components/shared/UserLayout.jsx";
 import ProtectedRoute from "./components/shared/ProtectedRoute.jsx";
 import Sirkulasi from "./pages/admin/Sirkulasi.jsx";
 import Users from "./pages/users/Users.jsx";
@@ -28,6 +29,20 @@ export default function App() {
           element={
             <ProtectedRoute requiredRole="admin">
               <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="sirkulasi" element={<Sirkulasi />} />
+          <Route path="buku" element={<Denda />} />
+          <Route path="perpustakaan" element={<Kategori />} />
+        </Route>
+        
+        {/* User */}
+        <Route
+          path="/user"
+          element={
+            <ProtectedRoute requiredRole="anggota">
+              <UserLayout />
             </ProtectedRoute>
           }
         >

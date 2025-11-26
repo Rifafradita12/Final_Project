@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { LayoutDashboard, Users, BookOpen, Repeat, LogOut } from "lucide-react";
 
-export default function AdminLayout() {
+export default function UserLayout() {
     const [open, setOpen] = useState(true);
     const location = useLocation();
 
     const menu = [
-        { name: "Dashboard", to: "/admin", icon: <LayoutDashboard size={20} /> },
-        { name: "Data Kategori", to: "/admin/perpustakaan", icon: <Users size={20} /> },
-        { name: "Data Buku", to: "/admin/buku", icon: <BookOpen size={20} /> },
-        { name: "Sirkulasi", to: "/admin/sirkulasi", icon: <Repeat size={20} /> },
+        { name: "Dashboard", to: "/user", icon: <LayoutDashboard size={20} /> },
+        { name: "Data Kategori", to: "/user/perpustakaan", icon: <Users size={20} /> },
+        { name: "Data Buku", to: "/user/buku", icon: <BookOpen size={20} /> },
+        { name: "Sirkulasi", to: "/user/sirkulasi", icon: <Repeat size={20} /> },
     ];
 
     return (
@@ -37,7 +37,7 @@ export default function AdminLayout() {
                 <h1
                     className={`text-xl font-semibold my-8 transition-all ${!open && "opacity-0 hidden"}`}
                 >
-                    Admin Panel
+                    User Panel
                 </h1>
 
                 {/* NAVIGATION */}

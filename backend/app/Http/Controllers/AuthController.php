@@ -17,7 +17,6 @@ class AuthController extends Controller
             'prodi' => 'required|string',
             'email' => 'required|string|unique:users',
             'noHP' => 'required|string',
-            'role' => 'required|in:admin,anggota',
             'password' => 'required|min:8'
         ]);
 
@@ -31,7 +30,7 @@ class AuthController extends Controller
             'prodi' => $request->prodi,
             'email' => $request->email,
             'noHP' => $request->noHP,
-            'role' => $request->role,
+            'role' => "anggota",
             'password' => bcrypt($request->password)
         ]);
 

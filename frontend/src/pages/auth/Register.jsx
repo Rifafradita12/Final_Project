@@ -4,8 +4,11 @@ import "./Register.css";
 
 function Register() {
     const [form, setForm] = useState({
-        name: "",
+        nama: "",
+        jekel: "",
+        prodi: "",
         email: "",
+        noHP: "",
         password: "",
     });
 
@@ -24,31 +27,20 @@ function Register() {
         setError({});
         setLoading(true);
 
-        const newError = {};
-
-        if (!form.name.trim()) newError.name = "Nama tidak boleh kosong";
-        if (!form.email.trim()) newError.email = "Email wajib diisi";
-        else if (!/\S+@\S+\.\S+/.test(form.email))
-            newError.email = "Format email tidak valid";
-        if (!form.password.trim()) newError.password = "Password wajib diisi";
-        else if (form.password.length < 8)
-            newError.password = "Password minimal 8 karakter";
-
-        if (Object.keys(newError).length > 0) {
-            setError(newError);
-            setLoading(false);
-            return;
-        }
-
         try {
             const res = await register(form);
-            console.log("REGISTER RESPONSE:", res);
-
             setPesan("Registrasi berhasil! Silakan login.");
-            setForm({ name: "", email: "", password: "" });
+            setForm({
+                nama: "",
+                jekel: "",
+                prodi: "",
+                email: "",
+                noHP: "",
+                password: "",
+            });
         } catch (err) {
             if (err.response?.status === 422) {
-                setError(err.response.data); // tampilkan error Laravel
+                setError(err.response.data);
             } else {
                 alert("Terjadi kesalahan server.");
             }
@@ -63,17 +55,42 @@ function Register() {
                 <h2>Daftar Akun Baru</h2>
 
                 <form onSubmit={handleSubmit}>
+                    
                     {/* Nama */}
                     <div className="input-group">
                         <label>Nama Lengkap</label>
                         <input
                             type="text"
-                            name="name"
-                            value={form.name}
+                            name="nama"
+                            value={form.nama}
                             onChange={handleChange}
                             placeholder="Masukkan nama"
                         />
-                        {error.name && <p className="error">{error.name}</p>}
+                        {error.nama && <p className="error">{error.nama}</p>}
+                    </div>
+
+                    {/* Jenis Kelamin */}
+                    <div className="input-group">
+                        <label>Jenis Kelamin</label>
+                        <select name="jekel" value={form.jekel} onChange={handleChange}>
+                            <option value="">-- Pilih --</option>
+                            <option value="lakiLaki">Laki-laki</option>
+                            <option value="perempuan">Perempuan</option>
+                        </select>
+                        {error.jekel && <p className="error">{error.jekel}</p>}
+                    </div>
+
+                    {/* Prodi */}
+                    <div className="input-group">
+                        <label>Program Studi</label>
+                        <input
+                            type="text"
+                            name="prodi"
+                            value={form.prodi}
+                            onChange={handleChange}
+                            placeholder="contoh: Teknik Informatika"
+                        />
+                        {error.prodi && <p className="error">{error.prodi}</p>}
                     </div>
 
                     {/* Email */}
@@ -87,6 +104,19 @@ function Register() {
                             placeholder="Masukkan email aktif"
                         />
                         {error.email && <p className="error">{error.email}</p>}
+                    </div>
+
+                    {/* Nomor HP */}
+                    <div className="input-group">
+                        <label>No Hp</label>
+                        <input
+                            type="text"
+                            name="noHP"
+                            value={form.noHP}
+                            onChange={handleChange}
+                            placeholder="08xxxxxxxxxx"
+                        />
+                        {error.noHP && <p className="error">{error.noHP}</p>}
                     </div>
 
                     {/* Password */}

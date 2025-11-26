@@ -28,12 +28,14 @@ export const logout = async () => {
     }
 };
 
-export const register = async ({ name, username, email, password }) => {
+export const register = async ({ nama, jekel, prodi, email, noHP, password }) => {
     try {
         const { data } = await api.post("/register", {
-            name,
-            username,
+            nama,
+            jekel,
+            prodi,
             email,
+            noHP,
             password,
         });
         return data;
@@ -42,3 +44,4 @@ export const register = async ({ name, username, email, password }) => {
         throw error;
     }
 };
+
