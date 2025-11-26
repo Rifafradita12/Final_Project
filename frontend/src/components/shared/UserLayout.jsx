@@ -8,9 +8,9 @@ export default function UserLayout() {
 
     const menu = [
         { name: "Dashboard", to: "/user", icon: <LayoutDashboard size={20} /> },
-        { name: "Data Kategori", to: "/user/perpustakaan", icon: <Users size={20} /> },
-        { name: "Data Buku", to: "/user/buku", icon: <BookOpen size={20} /> },
-        { name: "Sirkulasi", to: "/user/sirkulasi", icon: <Repeat size={20} /> },
+        { name: "Data Buku User", to: "/user/buku_user", icon: <Users size={20} /> },
+        { name: "List Buku", to: "/user/buku", icon: <BookOpen size={20} /> },
+        { name: "Sirkulasi", to: "/user/sirkulasi_user", icon: <Repeat size={20} /> },
     ];
 
     return (
@@ -35,7 +35,7 @@ export default function UserLayout() {
 
                 {/* Title */}
                 <h1
-                    className={`text-xl font-semibold my-8 transition-all ${!open && "opacity-0 hidden"}`}
+                    className={`text-md font-semibold my-8 transition-all ${!open && "opacity-0 hidden"}`}
                 >
                     User Panel
                 </h1>
