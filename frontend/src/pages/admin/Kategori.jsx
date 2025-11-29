@@ -25,8 +25,7 @@ export default function Kategori() {
             const res = await getKategori();
             setKategori(res.data.data || []);
         } catch (err) {
-            console.error(err);
-            setError("Gagal memuat data kategori.");
+            setError("Gagal memuat kategori");
         } finally {
             setLoading(false);
         }
@@ -40,13 +39,13 @@ export default function Kategori() {
 
     const openEditModal = (item) => {
         setEditMode(true);
-        setCurrentId(item.id_kategori);
+        setCurrentId(item.id);
         setNamaInput(item.nama);
         setModalOpen(true);
     };
 
     const handleSubmit = async () => {
-        if (!namaInput.trim()) return alert("Nama kategori wajib diisi!");
+        if (!namaInput.trim()) return alert("Nama wajib diisi");
 
         try {
             if (editMode) {
@@ -54,90 +53,73 @@ export default function Kategori() {
             } else {
                 await createKategori(namaInput);
             }
+
             setModalOpen(false);
             loadKategori();
-        } catch (err) {
-            console.error(err);
-            alert("Gagal menyimpan data!");
+
+        } catch (e) {
+            alert("Gagal menyimpan kategori");
         }
     };
 
     const handleDelete = async (id) => {
-        if (!confirm("Yakin ingin menghapus kategori ini?")) return;
+        if (!confirm("Hapus kategori ini?")) return;
+
         try {
             await deleteKategori(id);
             loadKategori();
-        } catch (err) {
-            console.error(err);
-            alert("Gagal menghapus data!");
+        } catch (e) {
+            alert("Gagal menghapus kategori");
         }
     };
 
-    if (loading)
-        return (
-            <div className="p-8 text-center text-xl font-semibold text-gray-600">
-                Memuat data kategori...
-            </div>
-        );
-
-    if (error)
-        return (
-            <div className="p-8 text-center text-red-600 bg-red-100 border border-red-300 rounded-lg">
-                {error}
-            </div>
-        );
-
     return (
         <div className="p-8">
+
             <div className="flex justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-800">
-                    Data Kategori Buku
-                </h2>
+                <h2 className="text-2xl font-bold">Kategori Buku</h2>
 
                 <button
                     onClick={openAddModal}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg text-sm shadow transition"
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg"
                 >
                     + Tambah
                 </button>
             </div>
 
-            <div className="overflow-hidden bg-white shadow-md rounded-xl border border-gray-100">
+            <div className="bg-white shadow rounded-lg overflow-hidden">
                 <table className="min-w-full">
-                    <thead className="bg-gray-50 border-b border-gray-200">
-                        <tr className="text-gray-600 uppercase text-xs font-semibold">
-                            <th className="py-3 px-6 text-left">ID</th>
-                            <th className="py-3 px-6 text-left">Nama</th>
-                            <th className="py-3 px-6 text-center">Aksi</th>
+                    <thead className="bg-gray-50">
+                        <tr className="text-left text-xs uppercase text-gray-500 border-b">
+                            <th className="px-6 py-3">ID</th>
+                            <th className="px-6 py-3">Nama</th>
+                            <th className="px-6 py-3 text-center">Aksi</th>
                         </tr>
                     </thead>
 
                     <tbody className="text-sm">
                         {kategori.length === 0 ? (
                             <tr>
-                                <td colSpan="3" className="py-6 text-center text-gray-500">
-                                    Belum ada kategori.
+                                <td colSpan={3} className="text-center py-6 text-gray-500">
+                                    Tidak ada kategori.
                                 </td>
                             </tr>
                         ) : (
                             kategori.map((k) => (
-                                <tr
-                                    key={k.id_kategori}
-                                    className="border-b border-gray-100 hover:bg-gray-50 transition"
-                                >
-                                    <td className="py-3 px-6">{k.id_kategori}</td>
-                                    <td className="py-3 px-6 font-medium">{k.nama}</td>
-                                    <td className="py-3 px-6 text-center space-x-2">
+                                <tr key={k.id} className="border-b hover:bg-gray-50">
+                                    <td className="px-6 py-3">{k.id}</td>
+                                    <td className="px-6 py-3 font-medium">{k.nama}</td>
+                                    <td className="px-6 py-3 text-center space-x-4">
                                         <button
                                             onClick={() => openEditModal(k)}
-                                            className="text-yellow-600 hover:text-yellow-700 text-xs font-semibold transition"
+                                            className="text-yellow-600 hover:text-yellow-700"
                                         >
                                             Edit
                                         </button>
 
                                         <button
-                                            onClick={() => handleDelete(k.id_kategori)}
-                                            className="text-red-600 hover:text-red-700 text-xs font-semibold transition"
+                                            onClick={() => handleDelete(k.id)}
+                                            className="text-red-600 hover:text-red-700"
                                         >
                                             Hapus
                                         </button>
@@ -151,31 +133,30 @@ export default function Kategori() {
 
             {/* MODAL */}
             {modalOpen && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-                    <div className="bg-white p-6 rounded-xl shadow-xl w-80 animate-scaleIn">
-                        <h3 className="text-lg font-bold mb-4 text-gray-800">
+                <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
+                    <div className="bg-white p-6 rounded-xl shadow-lg w-80">
+                        <h3 className="text-lg font-bold mb-4">
                             {editMode ? "Edit Kategori" : "Tambah Kategori"}
                         </h3>
 
                         <input
-                            type="text"
-                            className="w-full border border-gray-300 rounded-lg p-2 mb-4 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none text-sm"
-                            placeholder="Nama kategori..."
                             value={namaInput}
                             onChange={(e) => setNamaInput(e.target.value)}
+                            className="border w-full p-2 rounded mb-4"
+                            placeholder="Nama kategori"
                         />
 
-                        <div className="flex justify-end gap-3">
+                        <div className="flex justify-end space-x-3">
                             <button
-                                className="bg-gray-200 hover:bg-gray-300 px-3 py-1.5 rounded-lg text-sm transition"
                                 onClick={() => setModalOpen(false)}
+                                className="bg-gray-200 px-3 py-1 rounded"
                             >
                                 Batal
                             </button>
 
                             <button
-                                className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-sm transition"
                                 onClick={handleSubmit}
+                                className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded"
                             >
                                 Simpan
                             </button>
@@ -183,6 +164,7 @@ export default function Kategori() {
                     </div>
                 </div>
             )}
+
         </div>
     );
 }

@@ -32,14 +32,23 @@ export default function AdminBuku() {
     }, []);
 
     const loadKategori = async () => {
-        const res = await getKategori();
-        setKategori(res.data);
+        try {
+            const res = await getKategori();
+            setKategori(Array.isArray(res.data.data) ? res.data.data : []);
+            
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     const loadBuku = async () => {
-        const res = await getBuku();
-        setBuku(res.data);
-        setLoading(false);
+        try {
+            const res = await getBuku();
+            setBuku(res.data);
+            setLoading(false);
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     const openCreate = () => {
@@ -68,7 +77,11 @@ export default function AdminBuku() {
             kategori_id: item.kategori_id,
             foto: null,
         });
-        setPreviewImage(item.foto ? `${bookImageStorage}/buku/${item.foto}` : null);
+
+        setPreviewImage(
+            item.foto ? `${bookImageStorage}/buku/${item.foto}` : null
+        );
+
         setModalOpen(true);
     };
 
@@ -82,8 +95,13 @@ export default function AdminBuku() {
 
         const formData = new FormData();
         Object.keys(form).forEach((key) => {
-            if (form[key] !== null) formData.append(key, form[key]);
+            if (key !== "foto" && form[key] !== null) formData.append(key, form[key]);
         });
+
+        // hanya kirim foto kalau ada file baru
+        if (form.foto instanceof File) {
+            formData.append("foto", form.foto);
+        }
 
         try {
             if (form.id) {
@@ -91,7 +109,6 @@ export default function AdminBuku() {
             } else {
                 await createBuku(formData);
             }
-
             setModalOpen(false);
             loadBuku();
         } catch (err) {
@@ -124,7 +141,7 @@ export default function AdminBuku() {
                 </button>
             </div>
 
-            {/* TABLE LIST */}
+            {/* TABLE */}
             <div className="overflow-x-auto bg-white rounded-xl shadow">
                 <table className="min-w-full">
                     <thead className="bg-gray-100">
@@ -150,11 +167,12 @@ export default function AdminBuku() {
                                     {b.foto ? (
                                         <img
                                             src={`${bookImageStorage}/buku/${b.foto}`}
-                                            alt="foto buku"
                                             className="w-12 h-12 object-cover rounded"
                                         />
                                     ) : (
-                                        <span className="text-gray-400 text-sm">Tidak ada</span>
+                                        <span className="text-sm text-gray-400">
+                                            Tidak ada
+                                        </span>
                                     )}
                                 </td>
                                 <td className="py-3 px-6 space-x-2">
@@ -179,7 +197,7 @@ export default function AdminBuku() {
 
             {/* MODAL CREATE / EDIT */}
             {modalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
                     <div className="bg-white w-96 p-6 rounded-xl shadow-xl">
                         <h3 className="text-xl font-bold mb-4">
                             {form.id ? "Edit Buku" : "Tambah Buku Baru"}
@@ -191,7 +209,9 @@ export default function AdminBuku() {
                                 placeholder="Judul Buku"
                                 value={form.judulBuku}
                                 className="w-full border rounded p-2"
-                                onChange={(e) => setForm({ ...form, judulBuku: e.target.value })}
+                                onChange={(e) =>
+                                    setForm({ ...form, judulBuku: e.target.value })
+                                }
                             />
 
                             <input
@@ -199,7 +219,9 @@ export default function AdminBuku() {
                                 placeholder="Pengarang"
                                 value={form.pengarang}
                                 className="w-full border rounded p-2"
-                                onChange={(e) => setForm({ ...form, pengarang: e.target.value })}
+                                onChange={(e) =>
+                                    setForm({ ...form, pengarang: e.target.value })
+                                }
                             />
 
                             <input
@@ -207,7 +229,9 @@ export default function AdminBuku() {
                                 placeholder="Penerbit"
                                 value={form.penerbit}
                                 className="w-full border rounded p-2"
-                                onChange={(e) => setForm({ ...form, penerbit: e.target.value })}
+                                onChange={(e) =>
+                                    setForm({ ...form, penerbit: e.target.value })
+                                }
                             />
 
                             <input
@@ -215,7 +239,9 @@ export default function AdminBuku() {
                                 placeholder="Tahun Terbit"
                                 value={form.thTerbit}
                                 className="w-full border rounded p-2"
-                                onChange={(e) => setForm({ ...form, thTerbit: e.target.value })}
+                                onChange={(e) =>
+                                    setForm({ ...form, thTerbit: e.target.value })
+                                }
                             />
 
                             <input
@@ -223,7 +249,9 @@ export default function AdminBuku() {
                                 placeholder="Stok"
                                 value={form.stok}
                                 className="w-full border rounded p-2"
-                                onChange={(e) => setForm({ ...form, stok: e.target.value })}
+                                onChange={(e) =>
+                                    setForm({ ...form, stok: e.target.value })
+                                }
                             />
 
                             <select
@@ -234,11 +262,12 @@ export default function AdminBuku() {
                                 }
                             >
                                 <option value="">Pilih Kategori</option>
-                                {kategori.map((k) => (
-                                    <option key={k.id} value={k.id}>
-                                        {k.nama}
-                                    </option>
-                                ))}
+                                {Array.isArray(kategori) &&
+                                    kategori.map((k) => (
+                                        <option key={k.id} value={k.id}>
+                                            {k.nama}
+                                        </option>
+                                    ))}
                             </select>
 
                             <input
@@ -246,8 +275,10 @@ export default function AdminBuku() {
                                 className="w-full border rounded p-2"
                                 onChange={(e) => {
                                     const file = e.target.files[0];
-                                    setForm({ ...form, foto: file });
-                                    if (file) setPreviewImage(URL.createObjectURL(file));
+                                    if (file) {
+                                        setForm({ ...form, foto: file });
+                                        setPreviewImage(URL.createObjectURL(file));
+                                    }
                                 }}
                             />
 
@@ -280,9 +311,11 @@ export default function AdminBuku() {
 
             {/* MODAL DELETE */}
             {deleteModal && (
-                <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
-                    <div className="bg-white p-5 w-80 rounded-xl">
-                        <p className="text-lg mb-4 text-center">Hapus buku ini?</p>
+                <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+                    <div className="bg-white p-5 w-80 rounded-xl shadow-lg">
+                        <p className="text-lg mb-4 text-center">
+                            Hapus buku ini?
+                        </p>
                         <div className="flex justify-center gap-3">
                             <button
                                 onClick={() => setDeleteModal(false)}

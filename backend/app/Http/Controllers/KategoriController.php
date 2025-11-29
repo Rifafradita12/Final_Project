@@ -2,117 +2,92 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\kategori;
+use App\Models\Kategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class KategoriController extends Controller
 {
     public function index() {
-        $kategori = kategori::all();
-
-        if ($kategori->isEmpty()) {
-            return response()->json([
-                "succes" => true,
-                "message" => "Resource data not found!"
-            ], 200);
-        };
+        $kategori = Kategori::all();
 
         return response()->json([
             "success" => true,
-            "message" => "get all resources",
+            "message" => "Get all kategori",
             "data" => $kategori
         ], 200);
     }
-    public function store (Request $request) {
-        $validator = Validator::make ($request->all(),[
+
+    public function store(Request $request) {
+        $validator = Validator::make($request->all(), [
             'nama' => 'required|string',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => $validator->errors()
+                'errors' => $validator->errors()
             ], 422);
         }
 
-        $kategori = kategori::create([
+        $kategori = Kategori::create([
             'nama' => $request->nama
         ]);
 
         return response()->json([
             'success' => true,
-            'message' => 'Resource added succes!',
+            'message' => 'Kategori berhasil ditambahkan',
             'data' => $kategori
         ], 201);
     }
 
-    public function show (string $id) {
-        $kategori = kategori::find($id);
+    public function update($id, Request $request) {
+        $kategori = Kategori::find($id);
 
         if (!$kategori) {
             return response()->json([
-                'success'=>false,
-                'message'=>'Resource not found!'
+                'success' => false,
+                'message' => 'Kategori tidak ditemukan'
             ], 404);
         }
 
-        return response()->json([
-            'success'=>true,
-            'message'=>'Get detail resource',
-            'data'=>$kategori
-        ], 200);
-    }
-
-    public function update (string $id, Request $request) {
-        $kategori = kategori::find($id);
-
-        if (!$kategori) {
-            return response()->json([
-                'success'=>false,
-                'message'=>'Resource not found!'
-            ], 404);
-        }
-
-        $validator = Validator::make ($request->all(),[
-            'nama' => 'required|string'
+        $validator = Validator::make($request->all(), [
+            'nama' => 'required|string',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => $validator->errors()
+                'errors' => $validator->errors()
             ], 422);
         }
 
-        $data = [
+        $kategori->update([
             'nama' => $request->nama
-        ];
-
-        $kategori->update($data);
+        ]);
 
         return response()->json([
             'success' => true,
-            'message' => 'Resource updated succes!',
+            'message' => 'Kategori berhasil diupdate',
             'data' => $kategori
         ], 200);
     }
 
-    public function destroy (string $id) {
-        $kategori = kategori::find($id);
+    public function destroy($id) {
+        $kategori = Kategori::find($id);
 
         if (!$kategori) {
             return response()->json([
-                'success'=>false,
-                'message'=>'Resource not found!'
+                'success' => false,
+                'message' => 'Kategori tidak ditemukan'
             ], 404);
         }
 
         $kategori->delete();
 
         return response()->json([
-            'success'=>true,
-            'message'=>'Delete resource successfully'
+            'success' => true,
+            'message' => 'Kategori berhasil dihapus'
         ], 200);
     }
 }
