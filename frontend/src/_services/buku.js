@@ -7,13 +7,18 @@ export const getBuku = async () => {
 
 export const createBuku = async (data) => {
     try {
-        const response = await API.post("/buku", data)
-        return response.data
+        const response = await API.post("/buku", data, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            }
+        });
+        return response.data;
     } catch (error) {
         console.log(error);
-        throw error
+        throw error;
     }
-}
+};
+
 
 export const showBuku = async (id) => {
     try {
@@ -26,13 +31,13 @@ export const showBuku = async (id) => {
 }
 
 export const updateBuku = async (id, data) => {
-    try {
-        const response = await API.post(`/buku/${id}`, data)
-    } catch (error) {
-        console.log(error);
-        throw error
-    }
-}
+    return API.post(`/buku/${id}?_method=PATCH`, data, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    });
+};
+
 
 export const deleteBuku = async (id) => {
     try {

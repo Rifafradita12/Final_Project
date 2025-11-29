@@ -25,8 +25,9 @@ class BukuController extends Controller
             "data" => $buku
         ], 200);
     }
-    public function store (Request $request) {
-        $validator = Validator::make ($request->all(),[
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'judulBuku' => 'required|string',
             'pengarang' => 'required|string',
             'penerbit' => 'required|string',
@@ -43,15 +44,20 @@ class BukuController extends Controller
             ], 422);
         }
 
-        $image = $request->file('foto');
-        $image->store('buku', 'public');
+        $filename = null;
+
+        if ($request->hasFile('foto')) {
+            $image = $request->file('foto');
+            $image->store('buku', 'public');
+            $filename = $image->hashName();
+        }
 
         $buku = buku::create([
             'judulBuku' => $request->judulBuku,
             'pengarang' => $request->pengarang,
             'penerbit' => $request->penerbit,
             'thTerbit' => $request->thTerbit,
-            'foto' => $image->hashName(),
+            'foto' => $filename,
             'stok' => $request->stok,
             'kategori_id' => $request->kategori_id
         ]);
@@ -80,22 +86,23 @@ class BukuController extends Controller
         ], 200);
     }
 
-    public function update (string $id, Request $request) {
+    public function update(string $id, Request $request)
+    {
         $buku = buku::find($id);
 
         if (!$buku) {
             return response()->json([
-                'success'=>false,
-                'message'=>'Resource not found!'
+                'success' => false,
+                'message' => 'Resource not found!'
             ], 404);
         }
 
-        $validator = Validator::make ($request->all(),[
+        $validator = Validator::make($request->all(), [
             'judulBuku' => 'required|string',
             'pengarang' => 'required|string',
             'penerbit' => 'required|string',
             'thTerbit' => 'required|digits:4',
-            'foto' => 'required|image|mimes:jpg,jpeg,png',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png',
             'stok' => 'required|integer',
             'kategori_id' => 'required|exists:kategori,id'
         ]);
@@ -107,23 +114,19 @@ class BukuController extends Controller
             ], 422);
         }
 
-        $data = [
-            'judulBuku' => $request->judulBuku,
-            'pengarang' => $request->pengarang,
-            'penerbit' => $request->penerbit,
-            'thTerbit' => $request->thTerbit,
-            'stok' => $request->stok,
-            'kategori_id' => $request->kategori_id
-        ];
+        $data = $request->only([
+            'judulBuku', 'pengarang', 'penerbit', 'thTerbit', 'stok', 'kategori_id'
+        ]);
 
         if ($request->hasFile('foto')) {
-            $image = $request->file('foto');
-            $image->store('buku', 'public');
-
+            // Hapus foto lama
             if ($buku->foto) {
-                Storage::disk('public')->delete('buku/'. $buku->foto);
+                Storage::disk('public')->delete('buku/' . $buku->foto);
             }
 
+            // Upload foto baru
+            $image = $request->file('foto');
+            $image->store('buku', 'public');
             $data['foto'] = $image->hashName();
         }
 
@@ -131,7 +134,7 @@ class BukuController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Resource updated succes!',
+            'message' => 'Resource updated successfully',
             'data' => $buku
         ], 200);
     }
