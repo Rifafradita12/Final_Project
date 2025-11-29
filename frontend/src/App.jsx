@@ -11,6 +11,7 @@ import Users from "./pages/users/Users.jsx";
 import Denda from "./pages/admin/Denda.jsx";
 import Kategori from "./pages/admin/Kategori.jsx";
 import Landing from "./pages/landing";
+import BukuAdmin from "./pages/admin/Buku.jsx";
 import UserBooks from "./pages/users/UserBooks.jsx";
 import UserChooseBooks from "./pages/users/UserChooseBooks.jsx";
 import UserHistories from "./pages/users/UserHistories.jsx";
@@ -37,7 +38,8 @@ export default function App() {
           }
         >
           <Route path="sirkulasi" element={<Sirkulasi />} />
-          <Route path="buku" element={<Denda />} />
+          <Route path="buku" element={<BukuAdmin />} />
+          <Route path="denda" element={<Denda />} />
           <Route path="perpustakaan" element={<Kategori />} />
         </Route>
         

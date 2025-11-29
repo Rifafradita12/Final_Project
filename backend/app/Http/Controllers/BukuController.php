@@ -31,7 +31,7 @@ class BukuController extends Controller
             'pengarang' => 'required|string',
             'penerbit' => 'required|string',
             'thTerbit' => 'required|digits:4',
-            'foto' => 'required|image|mimes:jpg,jpeg,png',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png',
             'stok' => 'required|integer',
             'kategori_id' => 'required|exists:kategori,id'
         ]);

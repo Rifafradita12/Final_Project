@@ -1,7 +1,8 @@
 import api from "../_api"; // axios instance kamu
 
 export const getKategori = async () => {
-    return await api.get("/kategori");
+    const data = await api.get("/kategori");
+    return data.data;
 };
 
 export const createKategori = async (nama) => {

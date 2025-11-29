@@ -10,7 +10,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
-     public function index() {
+    public function index() {
         $user = User::all();
 
         if ($user->isEmpty()) {

@@ -1,13 +1,13 @@
 import API from "../_api/index"
 
-export const getBooks = async () => {
-    constdata = await API.get("/buku")
+export const getBuku = async () => {
+    const data = await API.get("/buku")
     return data.data;
 };
 
-export const createBook = async (data) => {
+export const createBuku = async (data) => {
     try {
-        const response = await API.post("/books", data)
+        const response = await API.post("/buku", data)
         return response.data
     } catch (error) {
         console.log(error);
@@ -15,9 +15,9 @@ export const createBook = async (data) => {
     }
 }
 
-export const showBook = async (id) => {
+export const showBuku = async (id) => {
     try {
-        const { data } = await API.get(`/books/${id}`)
+        const { data } = await API.get(`/buku/${id}`)
         return data.data
     } catch (error) {
         console.log(error);
@@ -25,18 +25,18 @@ export const showBook = async (id) => {
     }
 }
 
-export const updateBook = async (id, data) => {
+export const updateBuku = async (id, data) => {
     try {
-        const response = await API.post(`/books/${id}`, data)
+        const response = await API.post(`/buku/${id}`, data)
     } catch (error) {
         console.log(error);
         throw error
     }
 }
 
-export const deleteBook = async (id) => {
+export const deleteBuku = async (id) => {
     try {
-        const response = await API.delete(`/books/${id}`, {
+        const response = await API.delete(`/buku/${id}`, {
             _method: "DELETE"
         })
     } catch (error) {
