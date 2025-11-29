@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BukuController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DendaController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\SirkulasiController;
@@ -13,6 +14,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+Route::get('/dashboard', [DashboardController::class, 'index']);
 Route::apiResource('/buku', BukuController::class);
 Route::apiResource('/denda', DendaController::class);
 Route::apiResource('/kategori', KategoriController::class);

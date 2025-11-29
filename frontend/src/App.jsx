@@ -14,6 +14,7 @@ import Landing from "./pages/landing";
 import BukuAdmin from "./pages/admin/Buku.jsx";
 import UserBooks from "./pages/users/UserBooks.jsx";
 import UserChooseBooks from "./pages/users/UserChooseBooks.jsx";
+import AdminDashboard from "./pages/admin/Dashboard.jsx";
 import UserHistories from "./pages/users/UserHistories.jsx";
 
 
@@ -37,6 +38,7 @@ export default function App() {
             </ProtectedRoute>
           }
         >
+          <Route index element={<AdminDashboard />} />
           <Route path="sirkulasi" element={<Sirkulasi />} />
           <Route path="buku" element={<BukuAdmin />} />
           <Route path="denda" element={<Denda />} />
