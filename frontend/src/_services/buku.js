@@ -1,9 +1,16 @@
 import API from "../_api/index"
 
 export const getBuku = async () => {
-    const data = await API.get("/buku")
-    return data.data;
+    try {
+    const res = await API.get("/buku")
+    console.log("RESPON GET BUKU:", res.data);
+    return res.data.data ?? [];
+    } catch (err) {
+        console.error("ERROR GET BUKU:", err);
+        return [];
+    }
 };
+
 
 export const createBuku = async (data) => {
     try {

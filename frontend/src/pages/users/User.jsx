@@ -39,25 +39,25 @@ export default function UserDashboard() {
         {
             name: "Data Kategori",
             desc: "Kelola kategori buku",
-            to: "/user/perpustakaan",
+            to: "/user/buku",
             icon: Layers,
         },
         {
             name: "Data Buku",
             desc: "Kelola semua data buku",
-            to: "/user/buku",
+            to: "/user/buku_user",
             icon: LibraryBig,
         },
         {
             name: "Sirkulasi",
             desc: "Peminjaman & pengembalian",
-            to: "/user/sirkulasi",
+            to: "/user/sirkulasi_user",
             icon: Repeat,
         },
     ];
 
     return (
-        <div className="space-y-10">
+        <div className="space-y-10 no-underline">
             {/* Title */}
             <h1 className="text-3xl font-bold text-gray-800">User Dashboard</h1>
 
@@ -99,7 +99,7 @@ export default function UserDashboard() {
                         >
                             <div className="flex items-center gap-3">
                                 <Icon size={24} className="text-gray-700" />
-                                <h2 className="text-lg font-semibold text-gray-800">
+                                <h2 className="text-lg no-underline font-semibold text-gray-800">
                                     {item.name}
                                 </h2>
                             </div>

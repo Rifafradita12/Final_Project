@@ -15,7 +15,8 @@ class BukuController extends Controller
         if ($buku->isEmpty()) {
             return response()->json([
                 "succes" => true,
-                "message" => "Resource data not found!"
+                "message" => "Resource data not found!",
+                "data" => []
             ], 200);
         };
 

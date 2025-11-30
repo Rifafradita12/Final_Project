@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { LayoutDashboard, Users, BookOpen, Repeat, LogOut } from "lucide-react";
 
 export default function UserLayout() {
     const [open, setOpen] = useState(true);
     const location = useLocation();
+    const user = JSON.parse(localStorage.getItem("user"));
+    
+    useEffect(() => {console.log(user)}, []);
 
     const menu = [
         { name: "Dashboard", to: "/user", icon: <LayoutDashboard size={20} /> },
@@ -37,7 +40,7 @@ export default function UserLayout() {
                 <h1
                     className={`text-md font-semibold my-8 transition-all ${!open && "opacity-0 hidden"}`}
                 >
-                    User Panel
+                    Welcome, {user?.nama}
                 </h1>
 
                 {/* NAVIGATION */}
@@ -57,7 +60,7 @@ export default function UserLayout() {
                             `}
                         >
                             {item.icon}
-                            {open && <span>{item.name}</span>}
+                            {open && <span className="no-underline">{item.name}</span>}
                         </Link>
                     ))}
                 </nav>
