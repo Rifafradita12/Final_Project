@@ -2,30 +2,47 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\sirkulasi;
+use App\Models\Sirkulasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class SirkulasiController extends Controller
 {
-    public function index() {
-        $sirkulasi = sirkulasi::with('buku', 'denda')->get();
+    public function index()
+    {
+        $sirkulasi = Sirkulasi::with('buku', 'denda')->get();
 
         if ($sirkulasi->isEmpty()) {
             return response()->json([
-                "succes" => true,
-                "message" => "Resource data not found!"
+                "success" => true,
+                "message" => "Resource data not found!",
+                "data" => []
             ], 200);
-        };
+        }
+
+        // Tambahkan nomor urut manual
+        $formatted = $sirkulasi->map(function ($item, $index) {
+            return [
+                "no"             => $index + 1,
+                "tglPinjam"      => $item->tglPinjam,
+                "tglKembali"     => $item->tglKembali,
+                "tglTempo"       => $item->tglTempo,
+                "status"         => strtoupper($item->status) == "PIN" ? "PINJAM" : "KEMBALI",
+                "buku"           => $item->buku ? $item->buku->judul : "-",
+                "denda"          => $item->denda ? $item->denda->jenis : "-",
+            ];
+        });
 
         return response()->json([
             "success" => true,
             "message" => "get all resources",
-            "data" => $sirkulasi
+            "data" => $formatted
         ], 200);
     }
-    public function store (Request $request) {
-        $validator = Validator::make ($request->all(),[
+
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'tglPinjam' => 'required|date',
             'tglKembali' => 'required|date',
             'status' => 'required|in:pin,kem',
@@ -41,14 +58,7 @@ class SirkulasiController extends Controller
             ], 422);
         }
 
-        $sirkulasi = sirkulasi::create([
-            'tglPinjam' => $request->tglPinjam,
-            'tglKembali' => $request->tglKembali,
-            'status' => $request->status,
-            'tglTempo' => $request->tglTempo,
-            'buku_id' => $request->buku_id,
-            'denda_id' => $request->denda_id
-        ]);
+        $sirkulasi = Sirkulasi::create($request->all());
 
         return response()->json([
             'success' => true,
@@ -57,34 +67,36 @@ class SirkulasiController extends Controller
         ], 201);
     }
 
-    public function show (string $id) {
-        $sirkulasi = sirkulasi::with('buku', 'denda')->find($id);
+    public function show(string $id)
+    {
+        $sirkulasi = Sirkulasi::with('buku', 'denda')->find($id);
 
         if (!$sirkulasi) {
             return response()->json([
-                'success'=>false,
-                'message'=>'Resource not found!'
+                'success' => false,
+                'message' => 'Resource not found!'
             ], 404);
         }
 
         return response()->json([
-            'success'=>true,
-            'message'=>'Get detail resource',
-            'data'=>$sirkulasi
+            'success' => true,
+            'message' => 'Get detail resource',
+            'data' => $sirkulasi
         ], 200);
     }
 
-    public function update (string $id, Request $request) {
-        $sirkulasi = sirkulasi::find($id);
+    public function update(string $id, Request $request)
+    {
+        $sirkulasi = Sirkulasi::find($id);
 
         if (!$sirkulasi) {
             return response()->json([
-                'success'=>false,
-                'message'=>'Resource not found!'
+                'success' => false,
+                'message' => 'Resource not found!'
             ], 404);
         }
 
-        $validator = Validator::make ($request->all(),[
+        $validator = Validator::make($request->all(), [
             'tglPinjam' => 'required|date',
             'tglKembali' => 'required|date',
             'status' => 'required|in:pin,kem',
@@ -100,16 +112,7 @@ class SirkulasiController extends Controller
             ], 422);
         }
 
-        $data = [
-            'tglPinjam' => $request->tglPinjam,
-            'tglKembali' => $request->tglKembali,
-            'status' => $request->status,
-            'tglTempo' => $request->tglTempo,
-            'buku_id' => $request->buku_id,
-            'denda_id' => $request->denda_id
-        ];
-
-        $sirkulasi->update($data);
+        $sirkulasi->update($request->all());
 
         return response()->json([
             'success' => true,
@@ -118,21 +121,22 @@ class SirkulasiController extends Controller
         ], 200);
     }
 
-    public function destroy (string $id) {
-        $sirkulasi = sirkulasi::find($id);
+    public function destroy(string $id)
+    {
+        $sirkulasi = Sirkulasi::find($id);
 
         if (!$sirkulasi) {
             return response()->json([
-                'success'=>false,
-                'message'=>'Resource not found!'
+                'success' => false,
+                'message' => 'Resource not found!'
             ], 404);
         }
 
         $sirkulasi->delete();
 
         return response()->json([
-            'success'=>true,
-            'message'=>'Delete resource successfully'
+            'success' => true,
+            'message' => 'Delete resource successfully'
         ], 200);
     }
 }
