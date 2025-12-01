@@ -23,13 +23,19 @@ class SirkulasiController extends Controller
         // Tambahkan nomor urut manual
         $formatted = $sirkulasi->map(function ($item, $index) {
             return [
-                "no"             => $index + 1,
-                "tglPinjam"      => $item->tglPinjam,
-                "tglKembali"     => $item->tglKembali,
-                "tglTempo"       => $item->tglTempo,
-                "status"         => strtoupper($item->status) == "PIN" ? "PINJAM" : "KEMBALI",
-                "buku"           => $item->buku ? $item->buku->judul : "-",
-                "denda"          => $item->denda ? $item->denda->jenis : "-",
+                "no"         => $index + 1,
+                "tglPinjam"  => $item->tglPinjam,
+                "tglKembali" => $item->tglKembali,
+                "tglTempo"   => $item->tglTempo,
+                "status"     => strtoupper($item->status) == "PIN" ? "PINJAM" : "KEMBALI",
+
+                "buku"       => $item->buku ? $item->buku->judul : "-",
+
+                // INTEGRASI DENDA
+                "denda" => $item->denda ? [
+                    "jenis" => $item->denda->jenis,
+                    "harga" => $item->denda->harga, // nominal uang
+                ] : null,
             ];
         });
 

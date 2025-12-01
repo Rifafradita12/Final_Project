@@ -1,40 +1,53 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getBuku } from "../../_services/buku";
+import { getKategori } from "../../_services/kategori";
 
 export default function UserChooseBooks() {
-    const kategori = [
-        { id: 1, nama: "Novel" },
-        { id: 2, nama: "Teknologi" },
-        { id: 3, nama: "Pendidikan" },
-    ];
+    const [kategori, setKategori] = useState([]);
+    const [books, setBooks] = useState([]);
+    const [selectedKategori, setSelectedKategori] = useState("");
+    const [loading, setLoading] = useState(true);
 
+    const [modalOpen, setModalOpen] = useState(false);
+    const [selectedBook, setSelectedBook] = useState(null);
+
+    // Load kategori & buku dari backend
+    useEffect(() => {
+        loadData();
+    }, []);
+
+    const loadData = async () => {
+        try {
+            const kategoriRes = await getKategori();
+            const bukuRes = await getBuku();
+
+            setKategori(kategoriRes);
+            setBooks(bukuRes);
+
+            setLoading(false);
+        } catch (error) {
+            console.log(error);
+            setLoading(false);
+        }
+    };
+
+    // Color badge kategori
     const kategoriColor = {
         1: "bg-pink-100 text-pink-700",
         2: "bg-blue-100 text-blue-700",
         3: "bg-green-100 text-green-700",
+        4: "bg-yellow-100 text-yellow-700",
     };
 
-    const books = [
-        { id: 1, judulBuku: "Ayah", pengarang: "Mail", penerbit: "Gramedia", thTerbit: 2025, foto: "https://images.unsplash.com/photo-1761839257287-3030c9300ece?q=80&w=1170&auto=format", stok: 20, kategori_id: 1 },
-        { id: 2, judulBuku: "Laskar Pelangi", pengarang: "Andrea Hirata", penerbit: "Bentang", thTerbit: 2005, foto: "https://images.unsplash.com/photo-1528207776546-365bb710ee93?q=80&w=1000&auto=format", stok: 5, kategori_id: 1 },
-        { id: 3, judulBuku: "Belajar React", pengarang: "Fahmi", penerbit: "Informatika", thTerbit: 2024, foto: "https://images.unsplash.com/photo-1633356122102-3fe601e05bd2?q=80&w=1170&auto=format", stok: 12, kategori_id: 2 },
-        { id: 4, judulBuku: "Pemrograman Modern", pengarang: "Rizal", penerbit: "Deepublish", thTerbit: 2023, foto: "https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?q=80&w=1000&auto=format", stok: 8, kategori_id: 2 },
-        { id: 5, judulBuku: "Matematika Dasar", pengarang: "Budi", penerbit: "Erlangga", thTerbit: 2023, foto: "https://images.unsplash.com/photo-1518133910546-b6c2fb7d79e3?q=80&w=735&auto=format", stok: 7, kategori_id: 3 },
-        { id: 6, judulBuku: "IPA SD Lengkap", pengarang: "Siti Aminah", penerbit: "Yudhistira", thTerbit: 2022, foto: "https://images.unsplash.com/photo-1550399105-c4db5fb85c18?q=80&w=1000&auto=format", stok: 15, kategori_id: 3 },
-    ];
-
-    const [selectedKategori, setSelectedKategori] = useState("");
-
+    // Filter berdasarkan kategori
     const filteredBooks = selectedKategori
         ? books.filter((b) => b.kategori_id === Number(selectedKategori))
         : [];
 
-    // 🔥 REKOMENDASI KALO BELUM PILIH KATEGORI → STOK PALING TIPIS
+    // Rekomendasi stok paling sedikit
     const recommendedBooks = [...books]
         .sort((a, b) => a.stok - b.stok)
         .slice(0, 3);
-
-    const [modalOpen, setModalOpen] = useState(false);
-    const [selectedBook, setSelectedBook] = useState(null);
 
     const openModal = (buku) => {
         setSelectedBook(buku);
@@ -51,6 +64,8 @@ export default function UserChooseBooks() {
         closeModal();
     };
 
+    if (loading) return <p className="text-gray-600">Loading...</p>;
+
     return (
         <div className="space-y-8">
             <h1 className="text-2xl font-bold text-gray-800">Pilih Buku Berdasarkan Kategori</h1>
@@ -64,8 +79,11 @@ export default function UserChooseBooks() {
                     className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-indigo-500 text-gray-700"
                 >
                     <option value="">-- Pilih Kategori --</option>
+
                     {kategori.map((k) => (
-                        <option key={k.id} value={k.id}>{k.nama}</option>
+                        <option key={k.id} value={k.id}>
+                            {k.nama}
+                        </option>
                     ))}
                 </select>
             </div>
@@ -82,30 +100,13 @@ export default function UserChooseBooks() {
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             {recommendedBooks.map((buku) => (
-                                <div key={buku.id} className="bg-white border border-gray-200 rounded-xl shadow p-4 hover:shadow-md transition">
-                                    <img src={buku.foto} className="w-full h-40 object-cover rounded-lg mb-3 border" />
-
-                                    <h3 className="text-lg font-semibold text-gray-800">{buku.judulBuku}</h3>
-
-                                    <span className={`text-xs px-2 py-1 rounded ${kategoriColor[buku.kategori_id]}`}>
-                                        {kategori.find((k) => k.id === buku.kategori_id).nama}
-                                    </span>
-
-                                    <p className="text-gray-600 text-sm mt-2">Pengarang: {buku.pengarang}</p>
-                                    <p className="text-gray-600 text-sm">Penerbit: {buku.penerbit}</p>
-                                    <p className="text-gray-600 text-sm">Tahun Terbit: {buku.thTerbit}</p>
-
-                                    <p className="mt-2 text-sm font-semibold text-red-600">
-                                        Stok: {buku.stok}
-                                    </p>
-
-                                    <button
-                                        onClick={() => openModal(buku)}
-                                        className="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg text-sm font-medium transition"
-                                    >
-                                        Pilih Buku
-                                    </button>
-                                </div>
+                                <BookCard
+                                    key={buku.id}
+                                    buku={buku}
+                                    kategori={kategori}
+                                    kategoriColor={kategoriColor}
+                                    onSelect={() => openModal(buku)}
+                                />
                             ))}
                         </div>
                     </>
@@ -114,34 +115,13 @@ export default function UserChooseBooks() {
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {filteredBooks.map((buku) => (
-                            <div key={buku.id} className="bg-white border border-gray-200 rounded-xl shadow p-4 hover:shadow-md transition">
-                                <img src={buku.foto} className="w-full h-40 object-cover rounded-lg mb-3 border" />
-
-                                <h3 className="text-lg font-semibold text-gray-800">{buku.judulBuku}</h3>
-                                <span className={`text-xs px-2 py-1 rounded ${kategoriColor[buku.kategori_id]}`}>
-                                    {kategori.find((k) => k.id === buku.kategori_id).nama}
-                                </span>
-
-                                <p className="text-gray-600 text-sm mt-2">Pengarang: {buku.pengarang}</p>
-                                <p className="text-gray-600 text-sm">Penerbit: {buku.penerbit}</p>
-                                <p className="text-gray-600 text-sm">Tahun Terbit: {buku.thTerbit}</p>
-
-                                <p className={`mt-2 text-sm font-semibold ${buku.stok > 0 ? "text-green-600" : "text-red-600"}`}>
-                                    Stok: {buku.stok}
-                                </p>
-
-                                <button
-                                    disabled={buku.stok === 0}
-                                    onClick={() => openModal(buku)}
-                                    className={`w-full mt-4 py-2 rounded-lg text-sm font-medium transition ${
-                                        buku.stok === 0
-                                            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                                            : "bg-indigo-600 hover:bg-indigo-700 text-white"
-                                    }`}
-                                >
-                                    {buku.stok === 0 ? "Stok Habis" : "Pilih Buku"}
-                                </button>
-                            </div>
+                            <BookCard
+                                key={buku.id}
+                                buku={buku}
+                                kategori={kategori}
+                                kategoriColor={kategoriColor}
+                                onSelect={() => openModal(buku)}
+                            />
                         ))}
                     </div>
                 )}
@@ -150,10 +130,17 @@ export default function UserChooseBooks() {
             {/* Modal */}
             {modalOpen && selectedBook && (
                 <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
-                    <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md scale-95 animate-[fadeIn_0.15s_ease-out_forwards]">
+                    <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md">
                         <h2 className="text-xl font-bold mb-4 text-gray-800">Konfirmasi Pilihan</h2>
 
-                        <img src={selectedBook.foto} className="w-full h-48 object-cover rounded-lg mb-4" />
+                        <img
+                            src={
+                                selectedBook.foto
+                                    ? `http://127.0.0.1:8000/storage/buku/${selectedBook.foto}`
+                                    : "https://via.placeholder.com/150"
+                            }
+                            className="w-full h-48 object-cover rounded-lg mb-4"
+                        />
 
                         <p className="text-lg font-semibold">{selectedBook.judulBuku}</p>
                         <p className="text-gray-600">Pengarang: {selectedBook.pengarang}</p>
@@ -170,6 +157,58 @@ export default function UserChooseBooks() {
                     </div>
                 </div>
             )}
+        </div>
+    );
+}
+
+// 🔥 Component Kartu Buku (biar clean)
+function BookCard({ buku, kategori, kategoriColor, onSelect }) {
+    const kategoriName = kategori.find((k) => k.id === buku.kategori_id);
+
+    return (
+        <div className="bg-white border border-gray-200 rounded-xl shadow p-4 hover:shadow-md transition">
+            <img
+                src={
+                    buku.foto
+                        ? `http://127.0.0.1:8000/storage/buku/${buku.foto}`
+                        : "https://via.placeholder.com/150"
+                }
+                className="w-full h-40 object-cover rounded-lg mb-3 border"
+            />
+
+            <h3 className="text-lg font-semibold text-gray-800">{buku.judulBuku}</h3>
+
+            <span
+                className={`text-xs px-2 py-1 rounded ${
+                    kategoriColor[buku.kategori_id] || "bg-gray-200 text-gray-700"
+                }`}
+            >
+                {kategoriName?.nama || "Tidak Ada Kategori"}
+            </span>
+
+            <p className="text-gray-600 text-sm mt-2">Pengarang: {buku.pengarang}</p>
+            <p className="text-gray-600 text-sm">Penerbit: {buku.penerbit}</p>
+            <p className="text-gray-600 text-sm">Tahun Terbit: {buku.thTerbit}</p>
+
+            <p
+                className={`mt-2 text-sm font-semibold ${
+                    buku.stok > 0 ? "text-green-600" : "text-red-600"
+                }`}
+            >
+                Stok: {buku.stok}
+            </p>
+
+            <button
+                disabled={buku.stok === 0}
+                onClick={onSelect}
+                className={`w-full mt-4 py-2 rounded-lg text-sm font-medium transition ${
+                    buku.stok === 0
+                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                        : "bg-indigo-600 hover:bg-indigo-700 text-white"
+                }`}
+            >
+                {buku.stok === 0 ? "Stok Habis" : "Pilih Buku"}
+            </button>
         </div>
     );
 }
