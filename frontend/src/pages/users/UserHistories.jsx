@@ -49,12 +49,7 @@ export default function UserHistories() {
                 📋 Data Transaksi Sirkulasi
             </h2>
 
-            {/* Tombol */}
-            <div className="flex justify-between items-center mb-4">
-                <button className="bg-teal-600 hover:bg-teal-700 text-white font-medium py-2 px-4 rounded-lg shadow transition duration-150">
-                    + Tambah Peminjaman
-                </button>
-            </div>
+            
 
             {/* Tabel Responsif */}
             <div className="overflow-x-auto bg-white shadow-lg rounded-xl">
