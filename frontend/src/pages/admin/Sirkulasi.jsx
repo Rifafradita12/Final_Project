@@ -13,7 +13,8 @@ export default function Sirkulasi() {
     const loadData = async () => {
         try {
             const res = await getSirkulasi();
-            setData(res.data.data);
+            // getSirkulasi return array langsung
+            setData(Array.isArray(res) ? res : []);
             setLoading(false);
         } catch (err) {
             setError("Gagal memuat data.");
@@ -50,9 +51,9 @@ export default function Sirkulasi() {
                                 </td>
                             </tr>
                         ) : (
-                            data.map((item) => (
-                                <tr key={item.no} className="border-b hover:bg-gray-50">
-                                    <td className="py-3 px-4">{item.no}</td>
+                            data.map((item, index) => (
+                                <tr key={item.id || index} className="border-b hover:bg-gray-50">
+                                    <td className="py-3 px-4">{index + 1}</td>
                                     <td className="py-3 px-4">{item.tglPinjam}</td>
                                     <td className="py-3 px-4">{item.tglKembali}</td>
                                     <td className="py-3 px-4 text-red-600">{item.tglTempo}</td>

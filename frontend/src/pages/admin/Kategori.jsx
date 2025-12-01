@@ -23,7 +23,8 @@ export default function Kategori() {
     const loadKategori = async () => {
         try {
             const res = await getKategori();
-            setKategori(res.data.data || []);
+            // getKategori return array langsung, bukan nested
+            setKategori(Array.isArray(res) ? res : []);
         } catch (err) {
             setError("Gagal memuat kategori");
         } finally {

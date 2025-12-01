@@ -22,7 +22,7 @@ export default function UserBooks() {
                 : "https://via.placeholder.com/150",
 
             stok: item.stok,
-            kategori: item.kategori?.namaKategori || "Tidak Ada Kategori",
+            kategori: item.kategori?.nama || "Tidak Ada Kategori",
 
             // NOTE: kamu bisa ubah sesuai logika sirkulasi nanti
             status: item.stok > 0 ? "Baca Sekarang" : "Dipinjam",

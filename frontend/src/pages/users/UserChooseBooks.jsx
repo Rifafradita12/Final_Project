@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { getBuku } from "../../_services/buku";
 import { getKategori } from "../../_services/kategori";
 
 export default function UserChooseBooks() {
+    const [searchParams] = useSearchParams();
     const [kategori, setKategori] = useState([]);
     const [books, setBooks] = useState([]);
     const [selectedKategori, setSelectedKategori] = useState("");
@@ -23,6 +25,12 @@ export default function UserChooseBooks() {
 
             setKategori(kategoriRes);
             setBooks(bukuRes);
+
+            // Set kategori dari URL parameter jika ada
+            const kategoriFromUrl = searchParams.get("kategori");
+            if (kategoriFromUrl) {
+                setSelectedKategori(kategoriFromUrl);
+            }
 
             setLoading(false);
         } catch (error) {

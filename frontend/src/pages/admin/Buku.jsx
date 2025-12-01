@@ -34,7 +34,8 @@ export default function AdminBuku() {
     const loadKategori = async () => {
         try {
             const res = await getKategori();
-            setKategori(Array.isArray(res.data.data) ? res.data.data : []);
+            // getKategori sudah return array langsung, bukan nested
+            setKategori(Array.isArray(res) ? res : []);
             
         } catch (e) {
             console.log(e);
@@ -44,10 +45,12 @@ export default function AdminBuku() {
     const loadBuku = async () => {
         try {
             const res = await getBuku();
-            setBuku(res.data);
+            // getBuku return data array langsung
+            setBuku(Array.isArray(res) ? res : []);
             setLoading(false);
         } catch (e) {
             console.log(e);
+            setLoading(false);
         }
     };
 
