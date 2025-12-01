@@ -92,7 +92,7 @@ export default function Kategori() {
                 <table className="min-w-full">
                     <thead className="bg-gray-50">
                         <tr className="text-left text-xs uppercase text-gray-500 border-b">
-                            <th className="px-6 py-3">ID</th>
+                            <th className="px-6 py-3">NO</th>
                             <th className="px-6 py-3">Nama</th>
                             <th className="px-6 py-3 text-center">Aksi</th>
                         </tr>
@@ -106,9 +106,9 @@ export default function Kategori() {
                                 </td>
                             </tr>
                         ) : (
-                            kategori.map((k) => (
+                            kategori.map((k, index) => (
                                 <tr key={k.id} className="border-b hover:bg-gray-50">
-                                    <td className="px-6 py-3">{k.id}</td>
+                                    <td className="px-6 py-3">{index + 1}</td>
                                     <td className="px-6 py-3 font-medium">{k.nama}</td>
                                     <td className="px-6 py-3 text-center space-x-4">
                                         <button
