@@ -1,0 +1,213 @@
+/* ==========================
+   CONTAINER & TITLE
+========================== */
+.choose-container {
+    padding: 40px;
+    animation: fadeIn .4s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.choose-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.choose-subtitle {
+    color: #4b5563;
+    margin-bottom: 25px;
+}
+
+/* ==========================
+   DROPDOWN
+========================== */
+.dropdown-container {
+    width: 100%;
+    max-width: 350px;
+    margin-bottom: 30px;
+}
+
+.dropdown-label {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.dropdown-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    outline: none;
+    transition: .2s;
+}
+
+.dropdown-select:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 2px #c7d2fe;
+}
+
+/* ==========================
+   BOOK GRID
+========================== */
+.book-grid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+/* ==========================
+   BOOK CARD
+========================== */
+.book-card {
+    background: white;
+    padding: 18px;
+    border-radius: 15px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 3px 8px rgba(0,0,0,.05);
+    transition: .25s;
+}
+
+.book-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 14px rgba(0,0,0,.08);
+}
+
+.book-img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 10px;
+}
+
+.book-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.book-info {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.book-stock.green {
+    color: #16a34a;
+    font-weight: 600;
+}
+
+.book-stock.red {
+    color: #dc2626;
+    font-weight: 600;
+}
+
+/* BADGES */
+.badge {
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    margin-bottom: 8px;
+    display: inline-block;
+}
+
+.badge.pink {
+    background: #fce7f3;
+    color: #be185d;
+}
+
+.badge.blue {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.badge.green {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.badge.yellow {
+    background: #fef9c3;
+    color: #ca8a04;
+}
+
+/* BUTTONS */
+.btn-select {
+    width: 100%;
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 10px;
+    background: #6366f1;
+    color: white;
+    font-weight: 600;
+    transition: .25s;
+}
+
+.btn-select:hover {
+    background: #4f46e5;
+}
+
+.btn-select.disabled {
+    background: #d1d5db;
+    color: #6b7280;
+    cursor: not-allowed;
+}
+
+/* ==========================
+   MODAL
+========================== */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+}
+
+.modal-box {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 5px 20px rgba(0,0,0,.15);
+}
+
+.modal-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.modal-text {
+    color: #4b5563;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.btn-cancel {
+    padding: 8px 14px;
+    background: #e5e7eb;
+    border-radius: 10px;
+}
+
+.btn-confirm {
+    padding: 8px 14px;
+    background: #6366f1;
+    color: white;
+    border-radius: 10px;
+}

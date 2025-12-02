@@ -1,0 +1,145 @@
+/* WRAPPER */
+.admin-layout-wrapper {
+    display: flex;
+    min-height: 100vh;
+    position: relative;
+    background: #f4f6f9;
+}
+
+/* SIDEBAR */
+.sidebar {
+    background: #111827;
+    color: white;
+    width: 240px;
+    padding: 20px 15px;
+    transition: 0.3s ease;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.sidebar.closed {
+    width: 70px;
+}
+
+.sidebar-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    transition: 0.3s ease;
+}
+
+.sidebar-title.hide {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Toggle Button */
+.toggle-btn {
+    background: #1f2937;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 18px;
+}
+
+.toggle-btn:hover {
+    background: #374151;
+}
+
+/* NAVIGATION */
+.menu {
+    margin-top: 10px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #d1d5db;
+    text-decoration: none;
+    padding: 12px 14px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    transition: 0.25s;
+}
+
+.menu-item:hover {
+    background: #1f2937;
+    color: white;
+}
+
+.menu-item.active {
+    background: #3b82f6;
+    color: white;
+}
+
+.menu-item.center {
+    justify-content: center;
+}
+
+.icon {
+    display: flex;
+    align-items: center;
+}
+
+/* LOGOUT */
+.logout {
+    margin-top: 50px;
+    background: #dc2626;
+    color: white !important;
+}
+
+.logout:hover {
+    background: #b91c1c;
+}
+
+/* MOBILE OVERLAY */
+.mobile-overlay {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .mobile-overlay {
+        display: block;
+        background: rgba(0, 0, 0, 0.4);
+        position: fixed;
+        inset: 0;
+        z-index: 500;
+    }
+}
+
+/* CONTENT */
+.content {
+    flex: 1;
+    margin-left: 240px;
+    padding: 25px;
+    transition: 0.3s ease;
+}
+
+.content.compact {
+    margin-left: 70px;
+}
+
+@media (max-width: 768px) {
+    .content,
+    .content.compact {
+        margin-left: 0 !important;
+    }
+}
+
+/* CONTENT CARD */
+.content-card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    min-height: 200px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getBuku } from "../../_services/buku";
+import "./UserBooks.css";
 
 export default function UserBooks() {
     const [books, setBooks] = useState([]);
@@ -23,8 +24,6 @@ export default function UserBooks() {
 
             stok: item.stok,
             kategori: item.kategori?.nama || "Tidak Ada Kategori",
-
-            // NOTE: kamu bisa ubah sesuai logika sirkulasi nanti
             status: item.stok > 0 ? "Baca Sekarang" : "Dipinjam",
         }));
 
@@ -32,66 +31,50 @@ export default function UserBooks() {
         setLoading(false);
     };
 
-    if (loading) {
-        return <p>Loading...</p>;
-    }
+    if (loading) return <p className="ub-loading">Loading...</p>;
 
     return (
-        <div>
-            <h1 className="text-2xl font-bold mb-6 text-gray-800">
-                Buku yang Sedang Kamu Baca
-            </h1>
+        <div className="ub-container">
+            <div className="ub-header">
+                <h1 className="ub-title">Buku yang Sedang Kamu Baca</h1>
+                <p className="ub-subtitle">
+                    Lihat aktivitas bacaan kamu dengan tampilan yang lebih nyaman.
+                </p>
+            </div>
 
-            <div className="overflow-hidden bg-white rounded-xl shadow border border-gray-200">
-                <table className="min-w-full text-sm">
-                    <thead className="bg-gray-50 border-b border-gray-200">
-                        <tr className="text-gray-600 font-semibold uppercase text-xs">
-                            <th className="py-3 px-4 text-left">Foto</th>
-                            <th className="py-3 px-4 text-left">Judul Buku</th>
-                            <th className="py-3 px-4 text-left">Pengarang</th>
-                            <th className="py-3 px-4 text-left">Kategori</th>
-                            <th className="py-3 px-4 text-center">Tahun</th>
-                            <th className="py-3 px-4 text-center">Status</th>
+            <div className="ub-table-wrapper">
+                <table className="ub-table">
+                    <thead>
+                        <tr>
+                            <th>Foto</th>
+                            <th>Judul Buku</th>
+                            <th>Pengarang</th>
+                            <th>Kategori</th>
+                            <th>Tahun</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         {books.map((buku) => (
-                            <tr
-                                key={buku.id}
-                                className="border-b hover:bg-gray-50 transition"
-                            >
-                                <td className="py-3 px-4">
-                                    <img
-                                        src={buku.foto}
-                                        alt={buku.judulBuku}
-                                        className="w-12 h-12 rounded object-cover border shadow-sm"
-                                    />
+                            <tr key={buku.id}>
+                                <td>
+                                    <img src={buku.foto} className="ub-image" />
                                 </td>
 
-                                <td className="py-3 px-4 font-medium text-gray-800">
-                                    {buku.judulBuku}
-                                </td>
+                                <td className="ub-judul">{buku.judulBuku}</td>
 
-                                <td className="py-3 px-4 text-gray-700">
-                                    {buku.pengarang}
-                                </td>
-
-                                <td className="py-3 px-4 text-gray-700">
-                                    {buku.kategori}
-                                </td>
-
-                                <td className="py-3 px-4 text-center text-gray-700">
-                                    {buku.thTerbit}
-                                </td>
+                                <td>{buku.pengarang}</td>
+                                <td>{buku.kategori}</td>
+                                <td className="ub-center">{buku.thTerbit}</td>
 
                                 <td
-                                    className={`py-3 px-4 text-center font-semibold ${
+                                    className={`ub-status ${
                                         buku.status === "Dipinjam"
-                                            ? "text-blue-600"
+                                            ? "ub-blue"
                                             : buku.status === "Baca Sekarang"
-                                            ? "text-green-600"
-                                            : "text-gray-500"
+                                            ? "ub-green"
+                                            : "ub-gray"
                                     }`}
                                 >
                                     {buku.status}

@@ -1,0 +1,142 @@
+/* Wrapper */
+.history-container {
+    padding: 30px;
+    max-width: 1100px;
+    margin: auto;
+    font-family: "Inter", sans-serif;
+}
+
+/* Title */
+.history-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 4px;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.history-subtitle {
+    color: #0e0f11;
+    margin-bottom: 25px;
+}
+
+/* Table container */
+.table-wrapper {
+    background: rgb(60, 133, 241);
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    border: 1px solid #e73701;
+}
+
+/* Table */
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.history-table thead {
+    background: #eaeef1;
+}
+
+.history-table th {
+    padding: 14px;
+    text-align: left;
+    color: #27292c;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.history-table td {
+    padding: 14px;
+    border-bottom: 1px solid #e5e7eb;
+    color: #374151;
+}
+
+.history-table tbody tr:hover {
+    background: #f3f4f6;
+    transition: 0.2s;
+}
+
+/* Tempo (warna merah) */
+.tempo {
+    color: #dc2626;
+    font-weight: 600;
+}
+
+/* Status Badge */
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+/* Status colors */
+.status-pinjam {
+    background: #dbeafe;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+}
+
+.status-kembali {
+    background: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+
+.status-default {
+    background: #f3f4f6;
+    color: #4b5563;
+    border: 1px solid #e5e7eb;
+}
+
+/* Denda info */
+.denda-info .harga {
+    font-weight: 600;
+}
+
+.denda-info .jenis {
+    font-size: 11px;
+    color: #6b7280;
+}
+
+/* Buttons */
+.btn {
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    cursor: pointer;
+    border: none;
+    font-weight: 600;
+}
+
+.btn-kembali {
+    background: #16a34a;
+    color: white;
+}
+
+.btn-kembali:hover {
+    background: #15803d;
+}
+
+.btn-detail {
+    background: transparent;
+    color: #4b5563;
+}
+
+.btn-detail:hover {
+    color: black;
+}
+
+/* Loading */
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #6b7280;
+    font-size: 16px;
+}

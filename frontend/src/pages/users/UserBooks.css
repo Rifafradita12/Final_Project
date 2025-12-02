@@ -1,0 +1,122 @@
+/* Container */
+.ub-container {
+    padding: 32px;
+    animation: fadeIn .4s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Header */
+.ub-header {
+    margin-bottom: 20px;
+}
+
+.ub-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #1f2937;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.ub-subtitle {
+    margin-top: 4px;
+    color: #6b7280;
+    font-size: 15px;
+}
+
+/* Loading */
+.ub-loading {
+    color: #6b7280;
+    padding: 20px;
+    font-size: 16px;
+}
+
+/* Table Wrapper */
+.ub-table-wrapper {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+/* Table */
+.ub-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+
+.ub-table thead {
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.ub-table thead th {
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 700;
+    color: #6b7280;
+    padding: 14px;
+    text-align: left;
+}
+
+/* Rows */
+.ub-table tbody tr {
+    border-bottom: 1px solid #f0f0f0;
+    transition: 0.2s;
+}
+
+.ub-table tbody tr:hover {
+    background: #f9fafb;
+}
+
+/* Cells */
+.ub-table td {
+    padding: 14px;
+    color: #374151;
+}
+
+/* Foto */
+.ub-image {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Center text */
+.ub-center {
+    text-align: center;
+}
+
+/* Judul highlight */
+.ub-judul {
+    font-weight: 600;
+    color: #111827;
+}
+
+/* Status */
+.ub-status {
+    font-weight: 700;
+    text-align: center;
+}
+
+.ub-blue {
+    color: #2563eb;
+}
+
+.ub-green {
+    color: #059669;
+}
+
+.ub-gray {
+    color: #6b7280;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
