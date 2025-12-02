@@ -13,68 +13,109 @@ export default function Sirkulasi() {
     const loadData = async () => {
         try {
             const res = await getSirkulasi();
-            // getSirkulasi return array langsung
             setData(Array.isArray(res) ? res : []);
-            setLoading(false);
         } catch (err) {
             setError("Gagal memuat data.");
-            setLoading(false);
         }
+        setLoading(false);
     };
-
-    if (loading) return <div className="p-6">Loading...</div>;
-    if (error) return <div className="p-6 text-red-500">{error}</div>;
 
     return (
         <div className="p-8">
-            <h2 className="text-2xl font-bold mb-5">📘 Data Sirkulasi</h2>
 
-            <div className="overflow-x-auto bg-white shadow rounded-lg">
-                <table className="min-w-full text-sm">
-                    <thead className="bg-gray-100">
-                        <tr>
-                            <th className="py-3 px-4 text-left">No</th>
-                            <th className="py-3 px-4 text-left">Tgl Pinjam</th>
-                            <th className="py-3 px-4 text-left">Tgl Kembali</th>
-                            <th className="py-3 px-4 text-left">Tempo</th>
-                            <th className="py-3 px-4 text-center">Status</th>
-                            <th className="py-3 px-4 text-center">Buku</th>
-                            <th className="py-3 px-4 text-center">Denda</th>
-                        </tr>
-                    </thead>
+            {/* HEADER */}
+            <div className="flex items-center gap-3 mb-2">
+                <div className="w-2 h-8 bg-blue-600 rounded"></div>
+                <h1 className="text-3xl font-bold tracking-wide text-gray-800">
+                    Data Sirkulasi
+                </h1>
+            </div>
 
-                    <tbody>
-                        {data.length === 0 ? (
+            {/* DESKRIPSI */}
+            <p className="text-gray-600 text-sm mb-6">
+                Data Sirkulasi menampilkan riwayat peminjaman dan pengembalian buku oleh anggota perpustakaan.
+            </p>
+
+            {/* CONTAINER */}
+            <div className="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
+
+                {loading && (
+                    <div className="p-6 text-center text-gray-500">Loading...</div>
+                )}
+
+                {error && (
+                    <div className="p-6 text-center text-red-500">{error}</div>
+                )}
+
+                {!loading && !error && (
+                    <table className="w-full text-sm">
+                        <thead className="bg-gray-50 border-b">
                             <tr>
-                                <td colSpan="7" className="py-4 text-center text-gray-500">
-                                    Tidak ada data.
-                                </td>
+                                <th className="py-4 px-4 text-left font-semibold text-gray-600">No</th>
+                                <th className="py-4 px-4 text-left font-semibold text-gray-600">Tgl Pinjam</th>
+                                <th className="py-4 px-4 text-left font-semibold text-gray-600">Tgl Kembali</th>
+                                <th className="py-4 px-4 text-left font-semibold text-gray-600">Tempo</th>
+                                <th className="py-4 px-4 text-center font-semibold text-gray-600">Status</th>
+                                <th className="py-4 px-4 text-center font-semibold text-gray-600">Buku</th>
+                                <th className="py-4 px-4 text-center font-semibold text-gray-600">Denda</th>
                             </tr>
-                        ) : (
-                            data.map((item, index) => (
-                                <tr key={item.id || index} className="border-b hover:bg-gray-50">
-                                    <td className="py-3 px-4">{index + 1}</td>
-                                    <td className="py-3 px-4">{item.tglPinjam}</td>
-                                    <td className="py-3 px-4">{item.tglKembali}</td>
-                                    <td className="py-3 px-4 text-red-600">{item.tglTempo}</td>
+                        </thead>
 
-                                    <td className="py-3 px-4 text-center">
-                                        <span className={`px-3 py-1 rounded text-xs font-semibold ${
-                                            item.status === "PINJAM"
-                                                ? "bg-blue-100 text-blue-700"
-                                                : "bg-green-100 text-green-700"
-                                        }`}>
-                                            {item.status}
-                                        </span>
+                        <tbody>
+                            {data.length === 0 ? (
+                                <tr>
+                                    <td
+                                        colSpan="7"
+                                        className="py-6 text-center text-gray-500 italic"
+                                    >
+                                        Tidak ada data.
                                     </td>
-
-                                    <td className="py-3 px-4 text-center">{item.buku}</td>
-                                    <td className="py-3 px-4 text-center">{item.denda}</td>
                                 </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
+                            ) : (
+                                data.map((item, index) => (
+                                    <tr
+                                        key={item.id || index}
+                                        className="border-b hover:bg-gray-50 transition duration-200"
+                                    >
+                                        <td className="py-3 px-4">{index + 1}</td>
+                                        <td className="py-3 px-4">{item.tglPinjam}</td>
+                                        <td className="py-3 px-4">{item.tglKembali}</td>
+
+                                        <td
+                                            className={`py-3 px-4 font-medium ${
+                                                item.tglTempo < item.tglKembali
+                                                    ? "text-red-600"
+                                                    : "text-gray-800"
+                                            }`}
+                                        >
+                                            {item.tglTempo}
+                                        </td>
+
+                                        <td className="py-3 px-4 text-center">
+                                            <span
+                                                className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                                                    item.status === "PINJAM"
+                                                        ? "bg-blue-100 text-blue-700"
+                                                        : "bg-green-100 text-green-700"
+                                                }`}
+                                            >
+                                                {item.status}
+                                            </span>
+                                        </td>
+
+                                        <td className="py-3 px-4 text-center">
+                                            {item.buku}
+                                        </td>
+
+                                        <td className="py-3 px-4 text-center font-semibold text-gray-700">
+                                            {item.denda ? `Rp ${item.denda}` : "-"}
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                )}
             </div>
         </div>
     );

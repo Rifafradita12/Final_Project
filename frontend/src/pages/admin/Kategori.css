@@ -1,0 +1,212 @@
+/* ==============================
+   ELEGANT MINIMAL DASHBOARD UI
+   ============================== */
+
+/* Fade animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.kategori-container {
+    padding: 40px;
+    animation: fadeIn .4s ease;
+}
+
+/* Header Section */
+.kategori-header {
+    margin-bottom: 30px;
+}
+
+.kategori-header h2 {
+    font-size: 32px;
+    font-weight: 800;
+    color: #2d2f31;
+}
+
+.kategori-header p {
+    color: #6f7276;
+    font-size: 15px;
+    margin-top: 4px;
+}
+
+/* Button Tambah */
+.btn-add {
+    background: #2563eb;
+    padding: 12px 24px;
+    border-radius: 10px;
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: .25s ease;
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
+}
+
+.btn-add:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(37, 99, 235, 0.35);
+}
+
+/* Table Container Card */
+.table-wrapper {
+    margin-top: 25px;
+    padding: 25px;
+    border-radius: 16px;
+    background:aquamarine;
+    border: 1px solid #3d485e;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+    animation: fadeIn .5s ease;
+}
+
+/* Table */
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.custom-table thead th {
+    text-align: left;
+    padding: 14px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #050507;
+    border-bottom: 1px solid #e5e7eb;
+    font-family:'Times New Roman', Times, serif
+}
+
+.custom-table tbody td {
+    padding: 18px 10px;
+    color: #0b0e11;
+    font-size: 15px;
+    border-bottom: 1px solid #f1f1f1;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.custom-table tbody tr:hover {
+    background: hsl(180, 100%, 100%);
+    transition: .2s;
+}
+
+/* ACTION BUTTONS */
+.action-col {
+    display: flex;
+    gap: 10px;
+}
+
+/* Edit Button */
+.btn-edit {
+    padding: 7px 14px;
+    background: #2563eb;
+    color: #f1ede9;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.btn-edit:hover {
+    background: #2563eb;
+}
+
+/* Delete Button */
+.btn-delete {
+    padding: 7px 14px;
+    background: #c50a0a;
+    color: #e9e2e2;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s ease;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.btn-delete:hover {
+    background: #ca0a0a;
+}
+
+/* Empty State */
+.empty-row {
+    padding: 35px;
+    text-align: center;
+    font-size: 15px;
+    color: #9ca3af;
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn .25s ease;
+}
+
+.modal-box {
+    width: 350px;
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.12);
+    animation: fadeIn .35s ease;
+}
+
+.modal-box h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #2d2f31;
+}
+
+.modal-box input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.modal-box input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .2);
+}
+
+/* Modal Actions */
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-cancel {
+    background: #246cfc !important;
+    color: #e6eaf5 !important;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .25s ease;
+}
+
+.btn-cancel:hover {
+    background: #2776ec !important;
+}
+
+
+.btn-save {
+    background: #2563eb;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .25s ease;
+}
+
+.btn-save:hover {
+    background: #1d4ed8;
+}

@@ -1,97 +1,68 @@
 import React, { useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { LayoutDashboard, Users, BookOpen, Repeat, LogOut } from "lucide-react";
+import "./AdminLayout.css";
 
 export default function AdminLayout() {
     const [open, setOpen] = useState(true);
     const location = useLocation();
 
     const menu = [
-        { name: "Dashboard", to: "/admin", icon: <LayoutDashboard size={20} /> },
-        { name: "Data Kategori", to: "/admin/perpustakaan", icon: <Users size={20} /> },
-        { name: "Data Buku", to: "/admin/buku", icon: <BookOpen size={20} /> },
-        { name: "Sirkulasi", to: "/admin/sirkulasi", icon: <Repeat size={20} /> },
+        { name: "Dashboard", to: "/admin", icon: <LayoutDashboard size={21} /> },
+        { name: "Data Kategori", to: "/admin/perpustakaan", icon: <Users size={21} /> },
+        { name: "Data Buku", to: "/admin/buku", icon: <BookOpen size={21} /> },
+        { name: "Sirkulasi", to: "/admin/sirkulasi", icon: <Repeat size={21} /> },
     ];
 
     return (
-        <div className="flex min-h-screen bg-gray-100 font-sans">
-            {/* SIDEBAR */}
-            <aside
-                className={`
-                    ${open ? "w-64" : "w-40"}
-                    bg-white border-r border-gray-200
-                    p-5 flex flex-col transition-all duration-300
-                    fixed md:static inset-y-0 z-20 shadow-sm
-                    no-underline
-                `}
-            >
-                {/* Toggle */}
-                <button
-                    className="mb-6 text-gray-600 hover:bg-gray-100 p-2 my-8 rounded-lg w-fit"
-                    onClick={() => setOpen(!open)}
-                >
+        <div className="admin-layout-wrapper">
+            
+            {/* Sidebar */}
+            <aside className={`sidebar ${open ? "open" : "closed"}`}>
+                <button className="toggle-btn" onClick={() => setOpen(!open)}>
                     ☰
                 </button>
 
-                {/* Title */}
-                <h1
-                    className={`text-xl font-semibold my-8 transition-all ${!open && "opacity-0 hidden"}`}
-                >
-                    Admin Panel
+                <h1 className={`sidebar-title ${!open ? "hide" : ""}`}>
+                    Admin Perpustakaan
                 </h1>
 
-                {/* NAVIGATION */}
-                <nav className="flex flex-col gap-2 flex-1  my-2 select-none">
+                <nav className="menu">
                     {menu.map((item) => (
                         <Link
                             key={item.to}
                             to={item.to}
-                            className={`
-                                px-4 py-2.5 rounded-xl text-sm transition flex items-center gap-3
-                                no-underline
-                                ${location.pathname === item.to
-                                    ? "bg-gray-200 text-gray-900 font-medium"
-                                    : "text-gray-600 hover:bg-gray-100"
-                                }
-                                ${!open && "justify-center px-0"}
-                            `}
+                            className={`menu-item ${
+                                location.pathname === item.to ? "active" : ""
+                            } ${!open ? "center" : ""}`}
                         >
-                            {item.icon}
-                            {open && <span>{item.name}</span>}
+                            <div className="icon">{item.icon}</div>
+                            {open && <span className="text">{item.name}</span>}
                         </Link>
                     ))}
                 </nav>
 
-                {/* LOGOUT */}
                 <Link
                     to="/login"
-                    className={`
-                        mt-5 px-4 py-2.5 rounded-xl text-sm text-red-600 hover:bg-red-100 transition no-underline
-                        flex items-center gap-3 no-underline
-                        ${!open && "justify-center px-0"}
-                    `}
+                    className={`logout menu-item ${!open ? "center" : ""}`}
                 >
                     <LogOut size={20} />
-                    {open && "Logout"}
+                    {open && <span>Logout</span>}
                 </Link>
             </aside>
 
-            {/* OVERLAY (mobile) */}
+            {/* Mobile Overlay */}
             {open && (
-                <div
-                    className="fixed inset-0 bg-black/20 z-10 md:hidden"
-                    onClick={() => setOpen(false)}
-                />
+                <div className="mobile-overlay" onClick={() => setOpen(false)} />
             )}
 
-            {/* CONTENT */}
-            <main
-                className={`flex-1 p-6 transition-all md:ml-0 ${open ? "ml-64" : "ml-20"}`}
-            >
-                <div className="bg-white border border-gray-200 rounded-2xl shadow p-8 min-h-[80vh]">
+            {/* Content */}
+            <main className={`content ${open ? "shifted" : "compact"}`}>
+                <div className="content-card">
                     <Outlet />
                 </div>
             </main>
+
         </div>
     );
 }

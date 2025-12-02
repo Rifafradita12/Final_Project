@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getDashboard } from "../../_services/dashboard";
+import "./Dashbord.css";
 
 export default function AdminDashboard() {
     const [loading, setLoading] = useState(true);
@@ -28,46 +29,49 @@ export default function AdminDashboard() {
     if (loading) return <p className="p-6">Loading...</p>;
 
     return (
-        <div className="p-8 space-y-6">
-            <h1 className="text-3xl font-bold">Dashboard Admin</h1>
-            <p className="text-gray-600">
+        <div className="dashboard-container">
+
+            <h1 className="dashboard-title">Dashboard Admin</h1>
+            <p className="dashboard-subtitle">
                 Selamat datang! Berikut ringkasan aktivitas perpustakaan.
             </p>
 
-            {/* GRID */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="dashboard-grid">
 
                 <DashboardCard
                     title="Total User"
                     value={stats.total_user}
+                    color="card-blue"
                 />
 
                 <DashboardCard
                     title="Total Buku"
                     value={stats.total_buku}
+                    color="card-purple"
                 />
 
                 <DashboardCard
                     title="Sedang Dipinjam"
                     value={stats.total_dipinjam}
+                    color="card-orange"
                 />
 
                 <DashboardCard
                     title="Sudah Dikembalikan"
                     value={stats.total_dikembalikan}
+                    color="card-green"
                 />
+
             </div>
         </div>
     );
 }
 
-function DashboardCard({ title, value }) {
+function DashboardCard({ title, value, color }) {
     return (
-        <div className="bg-white border rounded-2xl shadow-sm p-6 flex flex-col gap-2 hover:shadow-md transition">
-            <p className="text-gray-500 text-sm">{title}</p>
-            <h2 className="text-4xl font-extrabold text-gray-900">
-                {value}
-            </h2>
+        <div className={`dashboard-card ${color}`}>
+            <p className="card-title">{title}</p>
+            <h2 className="card-value">{value}</h2>
         </div>
     );
 }

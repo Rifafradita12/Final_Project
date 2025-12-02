@@ -1,0 +1,126 @@
+/* ==============================
+   PREMIUM MODERN DASHBOARD UI  
+   ============================== */
+
+/* Container */
+.dashboard-container {
+    padding: 40px;
+    animation: fadeIn 0.6s ease;
+    font-family:'Times New Roman', Times, serif
+}
+
+/* Title */
+.dashboard-title {
+    font-size: 34px;
+    font-weight: 800;
+    color: #1f2937;
+    letter-spacing: -0.5px;
+}
+
+.dashboard-subtitle {
+    color: #6b7280;
+    margin-bottom: 30px;
+    font-size: 15px;
+}
+
+/* Grid Card */
+.dashboard-grid {
+    display: grid;
+    gap: 26px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+/* Card Styling */
+.dashboard-card {
+    padding: 28px;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    transition: 0.35s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover Glow + Lift */
+.dashboard-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
+}
+
+/* Animated Shine */
+.dashboard-card::after {
+    content: "";
+    position: absolute;
+    top: -100%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        60deg,
+        transparent 40%,
+        rgba(255, 255, 255, 0.4) 50%,
+        transparent 60%
+    );
+    transition: 0.5s;
+}
+
+.dashboard-card:hover::after {
+    top: -40%;
+    left: -20%;
+}
+
+/* Color Variants */
+.card-blue {
+    background: linear-gradient(145deg, #3b82f6, #60a5fa);
+    color: rgb(255, 255, 255);
+}
+
+.card-purple {
+    background: linear-gradient(145deg, #a855f7, #c084fc);
+    color: white;
+}
+
+.card-orange {
+    background: linear-gradient(145deg, #f59e0b, #fbbf24);
+    color: white;
+}
+
+.card-green {
+    background: linear-gradient(145deg, #10b981, #34d399);
+    color: white;
+}
+
+/* Icon */
+.icon-box {
+    opacity: 0.85;
+    margin-bottom: 10px;
+    transform: scale(1);
+    transition: 0.3s ease;
+}
+
+.dashboard-card:hover .icon-box {
+    transform: scale(1.15);
+    opacity: 1;
+}
+
+/* Text */
+.card-title {
+    font-size: 16px;
+    font-weight: 600;
+    opacity: 0.9;
+}
+
+.card-value {
+    font-size: 46px;
+    font-weight: 800;
+    margin-top: -4px;
+    letter-spacing: -1px;
+}
+
+/* Fade Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
