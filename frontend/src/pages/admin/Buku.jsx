@@ -223,13 +223,14 @@ export default function AdminBuku() {
 
             {/* MODAL CREATE / EDIT */}
             {modalOpen && (
-                <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4">
-                    <div className="bg-white w-full max-w-md p-8 rounded-xl shadow-2xl">
-                        <h3 className="text-2xl font-bold mb-6 text-gray-800">
-                            {form.id ? "✏️ Edit Buku" : "📚 Tambah Buku Baru"}
-                        </h3>
+                <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4 overflow-y-auto">
+                    <div className="bg-white w-full max-w-md rounded-xl shadow-2xl my-8">
+                        <div className="p-8 max-h-[80vh] overflow-y-auto">
+                            <h3 className="text-2xl font-bold mb-6 text-gray-800 sticky top-0 bg-white pb-4">
+                                {form.id ? "✏️ Edit Buku" : "📚 Tambah Buku Baru"}
+                            </h3>
 
-                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <form onSubmit={handleSubmit} className="space-y-4">
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 mb-1">Judul Buku</label>
                                 <input
@@ -364,6 +365,7 @@ export default function AdminBuku() {
                                 </button>
                             </div>
                         </form>
+                        </div>
                     </div>
                 </div>
             )}

@@ -19,6 +19,12 @@ Route::apiResource('/buku', BukuController::class);
 Route::apiResource('/denda', DendaController::class);
 Route::apiResource('/kategori', KategoriController::class);
 Route::apiResource('/sirkulasi', SirkulasiController::class);
+// PINJAM BUKU
+Route::post('/sirkulasi/pinjam', [SirkulasiController::class, 'pinjamBuku']);
+
+// KEMBALIKAN BUKU
+Route::post('/sirkulasi/kembalikan/{id}', [SirkulasiController::class, 'kembalikanBuku']);
+
 Route::apiResource('/user', AuthController::class);
 
 Route::post('/register', [AuthController::class, 'register']);

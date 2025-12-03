@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('sirkulasi', function (Blueprint $table) {
             $table->id();
             $table->date('tglPinjam');
-            $table->date('tglKembali');
+            $table->date('tglKembali')->nullable();
             $table->enum('status', ['pin', 'kem']);
             $table->date('tglTempo');
             $table->foreignId('buku_id')->constrained('buku')->onDelete('cascade');
-            $table->foreignId('denda_id')->constrained('denda')->onDelete('cascade');
+            $table->foreignId('denda_id')->nullable()->constrained('denda')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
 import API from "../../_api";
-import "./UserHistories.css";
+import { kembalikanBuku } from "../../_services/sirkulasi";
+import { BookOpen, AlertCircle } from "lucide-react";
 
 export default function UserHistories() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [processing, setProcessing] = useState(null);
 
     const loadData = async () => {
         try {
             const res = await API.get("/sirkulasi");
+            console.log("Data Sirkulasi:", res.data.data);
             setData(res.data.data ?? []);
         } catch (error) {
             console.error("ERROR:", error);
@@ -29,77 +32,157 @@ export default function UserHistories() {
     const getStatusClass = (status) => {
         switch (status) {
             case "PINJAM":
-                return "status-badge status-pinjam";
+                return "bg-blue-100 text-blue-700 border border-blue-300";
             case "KEMBALI":
-                return "status-badge status-kembali";
+                return "bg-green-100 text-green-700 border border-green-300";
             default:
-                return "status-badge status-default";
+                return "bg-gray-100 text-gray-700 border border-gray-300";
+        }
+    };
+
+    const handleKembalikan = async (id) => {
+        if (!window.confirm("Yakin ingin mengembalikan buku ini?")) return;
+
+        setProcessing(id);
+
+        try {
+            await kembalikanBuku(id);
+            alert("Buku berhasil dikembalikan!");
+            loadData();
+        } catch (error) {
+            alert(error.response?.data?.message || "Gagal mengembalikan buku!");
+            console.error(error);
+        } finally {
+            setProcessing(null);
         }
     };
 
     if (loading) {
-        return <div className="loading">Loading...</div>;
+        return <div className="p-8 text-center text-gray-500">Loading...</div>;
     }
 
     return (
-        <div className="history-container">
-            <h2 className="history-title">Riwayat Sirkulasi Buku</h2>
-            <p className="history-subtitle">Catatan peminjaman dan pengembalian buku kamu.</p>
-
-            <div className="table-wrapper">
-                <table className="history-table">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Tgl Pinjam</th>
-                            <th>Tgl Kembali</th>
-                            <th>Batas Tempo</th>
-                            <th>Status</th>
-                            <th>Buku</th>
-                            <th>Denda</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {data.map((item) => (
-                            <tr key={item.no}>
-                                <td>{item.no}</td>
-                                <td>{item.tglPinjam}</td>
-                                <td>{item.tglKembali ?? "-"}</td>
-                                <td className="tempo">{item.tglTempo}</td>
-
-                                <td>
-                                    <span className={getStatusClass(item.status)}>
-                                        {item.status}
-                                    </span>
-                                </td>
-
-                                <td>{item.buku}</td>
-
-                                <td>
-                                    {item.denda ? (
-                                        <div className="denda-info">
-                                            <div className="harga">{formatRupiah(item.denda.harga)}</div>
-                                            <div className="jenis">{item.denda.jenis}</div>
-                                        </div>
-                                    ) : (
-                                        "-"
-                                    )}
-                                </td>
-
-                                <td>
-                                    {item.status === "PINJAM" ? (
-                                        <button className="btn btn-kembali">Kembalikan</button>
-                                    ) : (
-                                        <button className="btn btn-detail">Detail</button>
-                                    )}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+        <div className="p-8 bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+            {/* HEADER */}
+            <div className="mb-8">
+                <h2 className="text-3xl font-bold text-gray-900">Riwayat Sirkulasi Buku</h2>
+                <p className="text-gray-600 mt-2">Catatan peminjaman dan pengembalian buku kamu.</p>
             </div>
+
+            {/* TABLE WRAPPER */}
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
+                <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                        <thead className="bg-blue-600">
+                            <tr className="text-left font-semibold text-white">
+                                <th className="py-3 px-4">No</th>
+                                <th className="py-3 px-4">Tgl Pinjam</th>
+                                <th className="py-3 px-4">Tgl Kembali</th>
+                                <th className="py-3 px-4">Batas Tempo</th>
+                                <th className="py-3 px-4">Status</th>
+                                <th className="py-3 px-4">Buku</th>
+                                <th className="py-3 px-4">Denda</th>
+                                <th className="py-3 px-4 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {data.length === 0 ? (
+                                <tr>
+                                    <td colSpan="8" className="py-8 text-center text-gray-500">
+                                        <div className="flex flex-col items-center justify-center">
+                                            <BookOpen size={40} className="text-gray-300 mb-2" />
+                                            <p>Tidak ada riwayat peminjaman</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ) : (
+                                data.map((item, index) => (
+                                    <tr key={item.id || index} className="border-b border-gray-200 hover:bg-blue-50 transition">
+                                        <td className="py-3 px-4 text-gray-800">{index + 1}</td>
+                                        <td className="py-3 px-4 text-gray-700">{item.tglPinjam}</td>
+                                        <td className="py-3 px-4 text-gray-700">{item.tglKembali ?? "-"}</td>
+                                        <td className="py-3 px-4 font-semibold text-red-600">{item.tglTempo}</td>
+
+                                        <td className="py-3 px-4">
+                                            <span className={`px-2 py-1 rounded-full text-xs font-bold ${getStatusClass(item.status)}`}>
+                                                {item.status}
+                                            </span>
+                                        </td>
+
+                                        <td className="py-3 px-4">
+                                            {typeof item.buku === 'object' ? (
+                                                <div>
+                                                    <p className="font-semibold text-gray-900 text-xs">{item.buku.judulBuku}</p>
+                                                    {item.buku.pengarang && (
+                                                        <p className="text-xs text-gray-500">{item.buku.pengarang}</p>
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <p className="font-semibold text-gray-900 text-xs">{item.buku}</p>
+                                            )}
+                                        </td>
+
+                                        <td className="py-3 px-4">
+                                            {item.denda ? (
+                                                <div className="bg-red-50 p-2 rounded border border-red-200 text-xs">
+                                                    <p className="font-bold text-red-700">{formatRupiah(item.denda.harga)}</p>
+                                                    {item.denda.jenis && (
+                                                        <p className="text-red-600">{item.denda.jenis}</p>
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <span className="inline-block px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-semibold border border-green-200">
+                                                    -
+                                                </span>
+                                            )}
+                                        </td>
+
+                                        <td className="py-3 px-4 text-center">
+                                            {item.status === "PINJAM" ? (
+                                                <button
+                                                    disabled={processing === item.id}
+                                                    onClick={() => handleKembalikan(item.id)}
+                                                    className="px-3 py-1 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white rounded text-xs font-semibold transition"
+                                                >
+                                                    {processing === item.id ? "Proses..." : "Kembalikan"}
+                                                </button>
+                                            ) : (
+                                                <button className="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded text-xs font-semibold transition">
+                                                    Detail
+                                                </button>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {/* SUMMARY SECTION */}
+            {data.length > 0 && (
+                <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* Total Peminjaman */}
+                    <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-8 text-white shadow-lg">
+                        <p className="text-blue-100 text-sm font-medium mb-3">Total Peminjaman</p>
+                        <h3 className="text-5xl font-bold">{data.length}</h3>
+                    </div>
+
+                    {/* Sudah Dikembalikan */}
+                    <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-8 text-white shadow-lg">
+                        <p className="text-green-100 text-sm font-medium mb-3">Sudah Dikembalikan</p>
+                        <h3 className="text-5xl font-bold">{data.filter(d => d.status === "KEMBALI").length}</h3>
+                    </div>
+
+                    {/* Masih Dipinjam */}
+                    <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-8 text-white shadow-lg">
+                        <p className="text-orange-100 text-sm font-medium mb-3">Masih Dipinjam</p>
+                        <h3 className="text-5xl font-bold">{data.filter(d => d.status === "PINJAM").length}</h3>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

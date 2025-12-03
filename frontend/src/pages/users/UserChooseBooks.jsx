@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getBuku } from "../../_services/buku";
 import { getKategori } from "../../_services/kategori";
+import { pinjamBuku } from "../../_services/sirkulasi";
 
 import "./UserChooseBooks.css";
 
@@ -14,6 +15,7 @@ export default function UserChooseBooks() {
 
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedBook, setSelectedBook] = useState(null);
+    const [processing, setProcessing] = useState(false);
 
     useEffect(() => {
         loadData();
@@ -64,9 +66,23 @@ export default function UserChooseBooks() {
         setModalOpen(false);
     };
 
-    const handleConfirm = () => {
-        alert(`Buku "${selectedBook.judulBuku}" berhasil dipilih!`);
-        closeModal();
+    const handleConfirm = async () => {
+        if (!selectedBook) return;
+
+        setProcessing(true);
+
+        try {
+            await pinjamBuku(selectedBook.id);
+            alert(`Buku "${selectedBook.judulBuku}" berhasil dipinjam!`);
+            loadData(); // Refresh data untuk update stok
+            closeModal();
+        } catch (error) {
+            const message = error.response?.data?.message || "Gagal meminjam buku!";
+            alert(message);
+            console.error("Error:", error);
+        } finally {
+            setProcessing(false);
+        }
     };
 
     if (loading) return <p className="loading-text">Loading...</p>;
@@ -154,11 +170,11 @@ export default function UserChooseBooks() {
                         <p className="modal-text">Stok: {selectedBook.stok}</p>
 
                         <div className="modal-buttons">
-                            <button onClick={closeModal} className="btn-cancel">
+                            <button onClick={closeModal} className="btn-cancel" disabled={processing}>
                                 Batal
                             </button>
-                            <button onClick={handleConfirm} className="btn-confirm">
-                                Konfirmasi
+                            <button onClick={handleConfirm} className="btn-confirm" disabled={processing}>
+                                {processing ? "Memproses..." : "Konfirmasi"}
                             </button>
                         </div>
                     </div>

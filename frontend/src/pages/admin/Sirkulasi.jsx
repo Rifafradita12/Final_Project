@@ -104,11 +104,29 @@ export default function Sirkulasi() {
                                         </td>
 
                                         <td className="py-3 px-4 text-center">
-                                            {item.buku}
+                                            {typeof item.buku === 'object' && item.buku ? (
+                                                <div className="text-left">
+                                                    <p className="font-semibold text-gray-900 text-xs">{item.buku.judulBuku}</p>
+                                                    {item.buku.pengarang && (
+                                                        <p className="text-xs text-gray-500">{item.buku.pengarang}</p>
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <p className="font-semibold text-gray-900 text-xs">{item.buku || "-"}</p>
+                                            )}
                                         </td>
 
                                         <td className="py-3 px-4 text-center font-semibold text-gray-700">
-                                            {item.denda ? `Rp ${item.denda}` : "-"}
+                                            {item.denda && typeof item.denda === 'object' ? (
+                                                <div className="text-xs">
+                                                    <p className="font-bold text-red-700">{item.denda.harga?.toLocaleString?.('id-ID') ? 'Rp ' + item.denda.harga.toLocaleString('id-ID') : 'Rp ' + item.denda.harga}</p>
+                                                    {item.denda.jenis && (
+                                                        <p className="text-red-600">{item.denda.jenis}</p>
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <span>-</span>
+                                            )}
                                         </td>
                                     </tr>
                                 ))
