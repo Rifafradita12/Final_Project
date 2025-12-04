@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getKategori } from "../../_services/kategori";
 import { getBuku, createBuku, updateBuku, deleteBuku } from "../../_services/buku";
 
+
 export default function AdminBuku() {
     const bookImageStorage = "http://localhost:8000/storage";
 
@@ -144,258 +145,335 @@ export default function AdminBuku() {
                 </button>
             </div>
 
-            {/* TABLE */}
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full">
-                        <thead className="bg-gradient-to-r from-blue-600 to-blue-700">
-                            <tr className="text-left text-sm font-semibold text-white">
-                                <th className="py-4 px-6">No</th>
-                                <th className="py-4 px-6">Judul</th>
-                                <th className="py-4 px-6">Kategori</th>
-                                <th className="py-4 px-6">Pengarang</th>
-                                <th className="py-4 px-6">Stok</th>
-                                <th className="py-4 px-6">Tahun</th>
-                                <th className="py-4 px-6">Foto</th>
-                                <th className="py-4 px-6 text-center">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {buku.length === 0 ? (
-                                <tr>
-                                    <td colSpan="8" className="py-8 text-center text-gray-500">
-                                        Tidak ada data buku
-                                    </td>
-                                </tr>
-                            ) : (
-                                buku.map((b, index) => (
-                                    <tr key={b.id} className="border-b hover:bg-blue-50 transition">
-                                        <td className="py-4 px-6 text-gray-700">{index + 1}</td>
-                                        <td className="py-4 px-6 text-gray-700 font-medium">{b.judulBuku}</td>
-                                        <td className="py-4 px-6">
-                                            <span className="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
-                                                {b.kategori?.nama}
-                                            </span>
-                                        </td>
-                                        <td className="py-4 px-6 text-gray-700">{b.pengarang}</td>
-                                        <td className="py-4 px-6">
-                                            <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
-                                                b.stok > 5 ? 'bg-green-100 text-green-700' : b.stok > 0 ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'
-                                            }`}>
-                                                {b.stok}
-                                            </span>
-                                        </td>
-                                        <td className="py-4 px-6 text-gray-700">{b.thTerbit}</td>
-                                        <td className="py-4 px-6">
-                                            {b.foto ? (
-                                                <img
-                                                    src={`${bookImageStorage}/buku/${b.foto}`}
-                                                    alt={b.judulBuku}
-                                                    className="w-10 h-10 object-cover rounded"
-                                                />
-                                            ) : (
-                                                <span className="text-xs text-gray-400">-</span>
-                                            )}
-                                        </td>
-                                        <td className="py-4 px-6 text-center">
-                                            <div className="flex gap-2 justify-center">
-                                                <button
-                                                    onClick={() => openEdit(b)}
-                                                    className="px-3 py-1 rounded bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-semibold transition"
-                                                >
-                                                    Edit
-                                                </button>
-                                                <button
-                                                    onClick={() => openDelete(b.id)}
-                                                    className="px-3 py-1 rounded bg-red-500 hover:bg-red-600 text-white text-sm font-semibold transition"
-                                                >
-                                                    Hapus
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+        {/* TABLE SUPER PREMIUM */}
+<div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.08)] border border-white/20 overflow-hidden">
+
+    <div className="overflow-x-auto">
+        <table className="w-full border-collapse">
+
+            {/* HEADER */}
+            <thead>
+                <tr className="bg-gradient-to-r from-blue-500 to-blue-700">
+                    {["No", "Judul", "Kategori", "Pengarang", "Stok", "Tahun", "Foto", "Aksi"].map((head, i) => (
+                        <th
+                            key={i}
+                            className="py-4 px-2 text-left text-sm font-semibold text-white tracking-wide"
+                        >
+                            {head}
+                        </th>
+                    ))}
+                </tr>
+            </thead>
+
+            {/* BODY */}
+            <tbody className="divide-y divide-gray-200">
+                {buku.map((item, index) => (
+                    <tr
+                        key={item.id}
+                        className="hover:bg-blue-50/50 transition cursor-pointer"
+                    >
+                        <td className="px-2 py-4 text-gray-700 font-medium">{index + 1}</td>
+
+                        <td className="px-6 py-4 text-gray-900 font-semibold">
+                            {item.judulBuku}
+                        </td>
+
+                        <td className="px-6 py-4">
+                            <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold">
+                                {item.kategori?.nama}
+                            </span>
+                        </td>
+
+                        <td className="px-2 py-4 text-gray-700">{item.pengarang}</td>
+
+                        <td className="px-2 py-2">
+                            <span className="font-bold text-green-600">{item.stok}</span>
+                        </td>
+
+                        <td className="px-2 py-4 text-gray-700">{item.thTerbit}</td>
+
+                        <td className="px-6 py-4">
+                            <img
+                                src={item.foto_url}
+                                className="w-12 h-16 object-cover rounded-lg shadow-sm border border-gray-200"
+                                alt="Foto Buku"
+                            />
+                        </td>
+
+                        {/* ACTION BUTTONS */}
+                        <td className="px-2 py-4">
+                            <div className="flex items-center gap-2 justify-center">
+
+                                {/* EDIT */}
+                                <button
+                                    onClick={() => openEdit(item)}
+                                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 transition"
+                                >
+                                    Edit
+                                </button>
+
+                                {/* DELETE */}
+                                <button
+                                    onClick={() => openDelete(item.id)}
+                                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 transition"
+                                >
+                                    Hapus
+                                </button>
+
+                            </div>
+                        </td>
+
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+
+          {/* MODAL CREATE / EDIT */}
+{modalOpen && (
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50 p-4 overflow-y-auto animate-fadeIn">
+
+        <div className="bg-white/80 backdrop-blur-md border border-white/20 
+                        w-full max-w-md rounded-2xl shadow-[0_8px_40px_rgb(0,0,0,0.18)]
+                        my-10 animate-scaleIn">
+
+            <div className="p-8 max-h-[80vh] overflow-y-auto">
+
+                {/* TITLE */}
+                <h3 className="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-2">
+                    {form.id ? (
+                        <>
+                            <span className="text-yellow-500 text-3xl">✏️</span> Edit Buku
+                        </>
+                    ) : (
+                        <>
+                            <span className="text-blue-600 text-3xl">📚</span> Tambah Buku Baru
+                        </>
+                    )}
+                </h3>
+
+                <form onSubmit={handleSubmit} className="space-y-5">
+
+                    {/* FIELD */}
+                    <div className="group">
+                        <label className="block text-sm font-semibold text-gray-700 mb-1">Judul Buku</label>
+                        <input
+                            type="text"
+                            placeholder="Masukkan judul buku"
+                            value={form.judulBuku}
+                            className="w-full border border-gray-300 rounded-xl p-3 
+                                       bg-white/80 backdrop-blur-sm
+                                       focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                            onChange={(e) =>
+                                setForm({ ...form, judulBuku: e.target.value })
+                            }
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-1">Pengarang</label>
+                        <input
+                            type="text"
+                            placeholder="Masukkan nama pengarang"
+                            value={form.pengarang}
+                            className="w-full border border-gray-300 rounded-xl p-3 
+                                       bg-white/80 backdrop-blur-sm
+                                       focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                            onChange={(e) =>
+                                setForm({ ...form, pengarang: e.target.value })
+                            }
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-1">Penerbit</label>
+                        <input
+                            type="text"
+                            placeholder="Masukkan nama penerbit"
+                            value={form.penerbit}
+                            className="w-full border border-gray-300 rounded-xl p-3 
+                                       bg-white/80 backdrop-blur-sm
+                                       focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                            onChange={(e) =>
+                                setForm({ ...form, penerbit: e.target.value })
+                            }
+                            required
+                        />
+                    </div>
+
+                    {/* GRID */}
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-1">
+                                Tahun Terbit
+                            </label>
+                            <input
+                                type="number"
+                                placeholder="2024"
+                                value={form.thTerbit}
+                                className="w-full border border-gray-300 rounded-xl p-3 
+                                           bg-white/80 backdrop-blur-sm
+                                           focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                                onChange={(e) =>
+                                    setForm({ ...form, thTerbit: e.target.value })
+                                }
+                                required
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-1">
+                                Stok
+                            </label>
+                            <input
+                                type="number"
+                                placeholder="0"
+                                value={form.stok}
+                                className="w-full border border-gray-300 rounded-xl p-3 
+                                           bg-white/80 backdrop-blur-sm
+                                           focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                                onChange={(e) =>
+                                    setForm({ ...form, stok: e.target.value })
+                                }
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    {/* SELECT */}
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-1">Kategori</label>
+                        <select
+                            value={form.kategori_id}
+                            className="w-full border border-gray-300 rounded-xl p-3 
+                                       bg-white/80 backdrop-blur-sm
+                                       focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                            onChange={(e) =>
+                                setForm({ ...form, kategori_id: e.target.value })
+                            }
+                            required
+                        >
+                            <option value="">-- Pilih Kategori --</option>
+                            {Array.isArray(kategori) &&
+                                kategori.map((k) => (
+                                    <option key={k.id} value={k.id}>
+                                        {k.nama}
+                                    </option>
+                                ))}
+                        </select>
+                    </div>
+
+                    {/* UPLOAD */}
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-1">
+                            Foto Buku
+                        </label>
+                        <input
+                            type="file"
+                            className="w-full border border-gray-300 rounded-xl p-3 
+                                       bg-white/80 backdrop-blur-sm cursor-pointer
+                                       focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                            onChange={(e) => {
+                                const file = e.target.files[0];
+                                if (file) {
+                                    setForm({ ...form, foto: file });
+                                    setPreviewImage(URL.createObjectURL(file));
+                                }
+                            }}
+                            accept="image/*"
+                        />
+                    </div>
+
+                    {/* PREVIEW */}
+                    {previewImage && (
+                        <div className="flex justify-center">
+                            <img
+                                src={previewImage}
+                                alt="preview"
+                                className="w-32 h-40 object-cover rounded-xl border-2 border-blue-400 shadow-md"
+                            />
+                        </div>
+                    )}
+
+                    {/* ACTION BUTTONS */}
+                    <div className="flex justify-end gap-3 mt-6">
+                        <button
+                            type="button"
+                            className="px-6 py-2 rounded-xl font-semibold border border-gray-300 
+                                       text-gray-700 hover:bg-gray-200 transition"
+                            onClick={() => setModalOpen(false)}
+                        >
+                            Batal
+                        </button>
+
+                        <button
+                            type="submit"
+                            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 
+                                       text-white rounded-xl font-semibold shadow-md hover:shadow-lg
+                                       transition-all"
+                        >
+                            Simpan
+                        </button>
+                    </div>
+                </form>
             </div>
 
-            {/* MODAL CREATE / EDIT */}
-            {modalOpen && (
-                <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4 overflow-y-auto">
-                    <div className="bg-white w-full max-w-md rounded-xl shadow-2xl my-8">
-                        <div className="p-8 max-h-[80vh] overflow-y-auto">
-                            <h3 className="text-2xl font-bold mb-6 text-gray-800 sticky top-0 bg-white pb-4">
-                                {form.id ? "✏️ Edit Buku" : "📚 Tambah Buku Baru"}
-                            </h3>
-
-                            <form onSubmit={handleSubmit} className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Judul Buku</label>
-                                <input
-                                    type="text"
-                                    placeholder="Masukkan judul buku"
-                                    value={form.judulBuku}
-                                    className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    onChange={(e) =>
-                                        setForm({ ...form, judulBuku: e.target.value })
-                                    }
-                                    required
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Pengarang</label>
-                                <input
-                                    type="text"
-                                    placeholder="Masukkan nama pengarang"
-                                    value={form.pengarang}
-                                    className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    onChange={(e) =>
-                                        setForm({ ...form, pengarang: e.target.value })
-                                    }
-                                    required
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Penerbit</label>
-                                <input
-                                    type="text"
-                                    placeholder="Masukkan nama penerbit"
-                                    value={form.penerbit}
-                                    className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    onChange={(e) =>
-                                        setForm({ ...form, penerbit: e.target.value })
-                                    }
-                                    required
-                                />
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-1">Tahun Terbit</label>
-                                    <input
-                                        type="number"
-                                        placeholder="2024"
-                                        value={form.thTerbit}
-                                        className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        onChange={(e) =>
-                                            setForm({ ...form, thTerbit: e.target.value })
-                                        }
-                                        required
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-1">Stok</label>
-                                    <input
-                                        type="number"
-                                        placeholder="0"
-                                        value={form.stok}
-                                        className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        onChange={(e) =>
-                                            setForm({ ...form, stok: e.target.value })
-                                        }
-                                        required
-                                    />
-                                </div>
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Kategori</label>
-                                <select
-                                    value={form.kategori_id}
-                                    className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    onChange={(e) =>
-                                        setForm({ ...form, kategori_id: e.target.value })
-                                    }
-                                    required
-                                >
-                                    <option value="">-- Pilih Kategori --</option>
-                                    {Array.isArray(kategori) &&
-                                        kategori.map((k) => (
-                                            <option key={k.id} value={k.id}>
-                                                {k.nama}
-                                            </option>
-                                        ))}
-                                </select>
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Foto Buku</label>
-                                <input
-                                    type="file"
-                                    className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    onChange={(e) => {
-                                        const file = e.target.files[0];
-                                        if (file) {
-                                            setForm({ ...form, foto: file });
-                                            setPreviewImage(URL.createObjectURL(file));
-                                        }
-                                    }}
-                                    accept="image/*"
-                                />
-                            </div>
-
-                            {previewImage && (
-                                <div className="flex justify-center">
-                                    <img
-                                        src={previewImage}
-                                        alt="preview"
-                                        className="w-32 h-40 object-cover rounded-lg border-2 border-blue-300"
-                                    />
-                                </div>
-                            )}
-
-                            <div className="flex justify-end gap-3 mt-6">
-                                <button
-                                    type="button"
-                                    className="px-6 py-2 bg-gray-400 hover:bg-gray-500 text-white rounded-lg font-semibold transition"
-                                    onClick={() => setModalOpen(false)}
-                                >
-                                    Batal
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition"
-                                >
-                                    Simpan
-                                </button>
-                            </div>
-                        </form>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* MODAL DELETE */}
-            {deleteModal && (
-                <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4">
-                    <div className="bg-white p-8 w-full max-w-sm rounded-xl shadow-2xl">
-                        <div className="text-center">
-                            <div className="text-5xl mb-4">🗑️</div>
-                            <h3 className="text-xl font-bold text-gray-800 mb-2">Hapus Buku?</h3>
-                            <p className="text-gray-500 mb-6">Data buku yang dihapus tidak dapat dikembalikan</p>
-                        </div>
-                        <div className="flex justify-center gap-4">
-                            <button
-                                onClick={() => setDeleteModal(false)}
-                                className="px-6 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg font-semibold transition"
-                            >
-                                Batal
-                            </button>
-                            <button
-                                onClick={confirmDelete}
-                                className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition"
-                            >
-                                Hapus
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
+    </div>
+)}
+
+           {/* MODAL DELETE */}
+{deleteModal && (
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50 p-4 animate-fadeIn">
+        
+        <div className="bg-white/80 backdrop-blur-md border border-white/20 
+                        p-8 w-full max-w-sm rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)]
+                        animate-scaleIn">
+
+            <div className="text-center">
+                <div className="mb-4">
+                    <div className="w-16 h-16 mx-auto rounded-full bg-red-100 flex items-center justify-center">
+                        <span className="text-4xl">🗑️</span>
+                    </div>
+                </div>
+
+                <h3 className="text-2xl font-semibold text-gray-800 mb-2">
+                    Hapus Buku?
+                </h3>
+
+                <p className="text-gray-600 text-sm mb-6 leading-relaxed">
+                    Data buku yang kamu hapus tidak dapat dipulihkan kembali.
+                </p>
+            </div>
+
+            <div className="flex justify-center gap-3">
+                <button
+                    onClick={() => setDeleteModal(false)}
+                    className="px-6 py-2 rounded-lg font-semibold border border-gray-300 
+                               text-gray-700 hover:bg-gray-200 transition-all duration-200"
+                >
+                    Batal
+                </button>
+
+                <button
+                    onClick={confirmDelete}
+                    className="px-6 py-2 rounded-lg font-semibold text-white
+                               bg-red-600 hover:bg-red-700 shadow-md hover:shadow-lg
+                               transition-all duration-200"
+                >
+                    Hapus
+                </button>
+            </div>
+
+        </div>
+    </div>
+)}
+       </div>
     );
 }

@@ -1,85 +1,119 @@
-/* Wrapper */
+/* =========================================================
+   WRAPPER
+========================================================= */
 .history-container {
-    padding: 30px;
-    max-width: 1100px;
+    padding: 32px;
+    max-width: 1150px;
     margin: auto;
     font-family: "Inter", sans-serif;
+    color: #1f2937;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
 }
 
-/* Title */
+
+/* =========================================================
+   TITLE SECTION
+========================================================= */
 .history-title {
-    font-size: 28px;
-    font-weight: 700;
-    color: #1f2937;
-    margin-bottom: 4px;
-    font-family: 'Times New Roman', Times, serif;
+    font-size: 32px;
+    font-weight: 800;
+    color: #111827;
+    letter-spacing: -0.5px;
 }
 
 .history-subtitle {
-    color: #0e0f11;
-    margin-bottom: 25px;
+    font-size: 14px;
+    color: #4b5563;
 }
 
-/* Table container */
+
+/* =========================================================
+   TABLE WRAPPER
+========================================================= */
 .table-wrapper {
-    background: rgb(60, 133, 241);
-    border-radius: 14px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    border: 0px solid #0b53e4;
+    padding: 0px 0;
     overflow: hidden;
-    border: 1px solid #e73701;
 }
 
-/* Table */
+
+/* =========================================================
+   TABLE
+========================================================= */
 .history-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0 10px;
     font-size: 14px;
 }
 
+.history-table th,
+.history-table td {
+    vertical-align: middle !important;
+}
+
+/* Table Header */
 .history-table thead {
-    background: #eaeef1;
+    background: linear-gradient(to right, #2563eb, #1d4ed8);
 }
 
 .history-table th {
-    padding: 14px;
-    text-align: left;
-    color: #27292c;
+    padding: 15px 25px;
     font-size: 12px;
+    font-weight: 300;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.7px;
+    color: #ffffff;
+    text-align: left;
+}
+
+/* Table Body */
+.history-table tbody tr {
+    background: #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
 .history-table td {
-    padding: 14px;
-    border-bottom: 1px solid #e5e7eb;
-    color: #374151;
+    padding: 18px 20px;
 }
 
 .history-table tbody tr:hover {
-    background: #f3f4f6;
-    transition: 0.2s;
+    background: #f9fafb;
+    transition: 0.2s ease-in-out;
 }
 
-/* Tempo (warna merah) */
-.tempo {
-    color: #dc2626;
-    font-weight: 600;
+
+/* =========================================================
+   BADGES
+========================================================= */
+.badge-tempo {
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
 }
 
-/* Status Badge */
 .status-badge {
     padding: 6px 12px;
-    border-radius: 20px;
+    border-radius: 999px;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
-    display: inline-block;
+    white-space: nowrap;
 }
 
-/* Status colors */
 .status-pinjam {
     background: #dbeafe;
-    color: #1d4ed8;
+    color: #1e40af;
     border: 1px solid #bfdbfe;
 }
 
@@ -95,58 +129,103 @@
     border: 1px solid #e5e7eb;
 }
 
-/* Denda info */
-.denda-info .harga {
-    font-weight: 600;
-}
 
-.denda-info .jenis {
-    font-size: 11px;
-    color: #6b7280;
-}
-
-/* Buttons */
-.btn {
+/* =========================================================
+   DENDA BOX
+========================================================= */
+.denda-box {
+    display: inline-block;
     padding: 6px 12px;
     border-radius: 8px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    min-width: 65px;
+    text-align: center;
+}
+
+.denda-box .harga {
+    font-size: 13px;
+    font-weight: 700;
+    color: #b91c1c;
+}
+
+.denda-box .jenis {
+    font-size: 10px;
+    color: #991b1b;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+.btn {
+    padding: 7px 14px;
+    border-radius: 10px;
     font-size: 12px;
-    cursor: pointer;
-    border: none;
     font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
 }
 
-.btn-kembali {
-    background: #16a34a;
-    color: white;
+.btn-primary {
+    background: #7c3aed;
+    color: #ffffff;
 }
-
-.btn-kembali:hover {
-    background: #15803d;
+.btn-primary:hover {
+    background: #6d28d9;
 }
 
 .btn-detail {
-    background: transparent;
-    color: #4b5563;
+    background: #60a5fa;
+    color: #ffffff;
 }
-
 .btn-detail:hover {
-    color: black;
+    background: #3b82f6;
 }
 
-/* Loading */
-.loading {
-    text-align: center;
-    padding: 40px;
-    color: #6b7280;
-    font-size: 16px;
+
+/* =========================================================
+   SUMMARY BOXES (3 WARNA)
+========================================================= */
+.summary-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
 }
-.loading-spinner {
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #3b82f6;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    animation: spin 1s linear infinite;
-    display: inline-block;
-    margin-right: 10px;
-}   
+
+/* CARD 1 – Oranye */
+.summary-card1 {
+    background: linear-gradient(135deg, #ea7b0c, #e06d05);
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* CARD 2 – Hijau */
+.summary-card2 {
+    background: linear-gradient(135deg, #22c55e, #15803d);
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* CARD 3 – Biru */
+.summary-card3 {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.summary-label {
+    font-size: 14px;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 6px;
+}
+
+.summary-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: #ffffff;
+}

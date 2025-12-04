@@ -55,8 +55,8 @@
     margin-top: 25px;
     padding: 25px;
     border-radius: 16px;
-    background:aquamarine;
-    border: 1px solid #3d485e;
+    background:#ffffff;
+    border: 1px solid #000000;
     box-shadow: 0 4px 14px rgba(0,0,0,0.06);
     animation: fadeIn .5s ease;
 }
@@ -74,7 +74,7 @@
     font-weight: 700;
     color: #050507;
     border-bottom: 1px solid #e5e7eb;
-    font-family:'Times New Roman', Times, serif
+    
 }
 
 .custom-table tbody td {
@@ -82,7 +82,7 @@
     color: #0b0e11;
     font-size: 15px;
     border-bottom: 1px solid #f1f1f1;
-    font-family: 'Times New Roman', Times, serif;
+    
 }
 
 .custom-table tbody tr:hover {
@@ -120,7 +120,7 @@
     font-weight: 600;
     cursor: pointer;
     transition: .2s ease;
-    font-family: 'Times New Roman', Times, serif;
+    
 }
 
 .btn-delete:hover {
