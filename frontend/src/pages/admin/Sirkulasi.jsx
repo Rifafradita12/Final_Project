@@ -143,9 +143,13 @@ export default function Sirkulasi() {
                                         <td className="py-3 px-4 text-center font-semibold text-gray-700">
                                             {item.denda && typeof item.denda === 'object' ? (
                                                 <div className="text-xs">
-                                                    <p className="font-bold text-red-700">{item.denda.harga?.toLocaleString?.('id-ID') ? 'Rp ' + item.denda.harga.toLocaleString('id-ID') : 'Rp ' + item.denda.harga}</p>
-                                                    {item.denda.jenis && (
-                                                        <p className="text-red-600">{item.denda.jenis}</p>
+                                                    <p className="font-bold text-red-700">
+                                                        {item.denda.jumlah ? 'Rp ' + item.denda.jumlah.toLocaleString('id-ID') : 'Rp 0'}
+                                                    </p>
+                                                    {item.denda.statusBayar && (
+                                                        <p className={`text-xs ${item.denda.statusBayar === 'lunas' ? 'text-green-600' : 'text-red-600'}`}>
+                                                            {item.denda.statusBayar === 'lunas' ? 'Lunas' : 'Belum Bayar'}
+                                                        </p>
                                                     )}
                                                 </div>
                                             ) : (
@@ -158,11 +162,20 @@ export default function Sirkulasi() {
                                                 <button
                                                     disabled={processing === item.id}
                                                     onClick={() => handleAccKembali(item.id)}
-                                                    className="px-3 py-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white rounded text-xs font-semibold transition flex items-center gap-1 justify-center"
+                                                    className="px-3 py-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white rounded text-xs font-semibold transition flex items-center gap-1 justify-center mx-auto"
                                                 >
                                                     <CheckCircle size={14} />
                                                     {processing === item.id ? "Proses..." : "ACC"}
                                                 </button>
+                                            ) : item.status === "KEMBALI" ? (
+                                                <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">
+                                                    <CheckCircle size={14} />
+                                                    Sudah Kembali
+                                                </span>
+                                            ) : item.status === "PINJAM" ? (
+                                                <span className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold">
+                                                    Sedang Dipinjam
+                                                </span>
                                             ) : (
                                                 <span className="text-gray-500 text-xs">-</span>
                                             )}

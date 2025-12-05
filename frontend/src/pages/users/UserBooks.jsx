@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getBuku } from "../../_services/buku";
+import { getSirkulasi } from "../../_services/sirkulasi";
 import "./UserBooks.css";
 
 export default function UserBooks() {
@@ -11,21 +12,45 @@ export default function UserBooks() {
     }, []);
 
     const loadBooks = async () => {
-        const data = await getBuku();
-        const formatted = data.map((item) => ({
-            id: item.id,
-            judulBuku: item.judulBuku,
-            pengarang: item.pengarang,
-            penerbit: item.penerbit,
-            thTerbit: item.thTerbit,
-            foto: item.foto
-                ? `http://127.0.0.1:8000/storage/buku/${item.foto}`
-                : "https://via.placeholder.com/150",
+        // Get user data from localStorage
+        const userData = JSON.parse(localStorage.getItem("user") || "{}");
+        const userId = userData.id;
 
-            stok: item.stok,
-            kategori: item.kategori?.nama || "Tidak Ada Kategori",
-            status: item.stok > 0 ? "Baca Sekarang" : "Dipinjam",
-        }));
+        // Get all books and sirkulasi data
+        const [booksData, sirkulasiData] = await Promise.all([
+            getBuku(),
+            getSirkulasi()
+        ]);
+
+        // Filter sirkulasi for current user with status 'PINJAM'
+        const userBorrowedBooks = sirkulasiData
+            .filter(item => item.namaUser === userData.nama && item.status === "PINJAM")
+            .map(item => item.buku?.id);
+
+        const formatted = booksData.map((item) => {
+            let status = "Tersedia";
+            
+            // Check if current user is borrowing this book
+            if (userBorrowedBooks.includes(item.id)) {
+                status = "Sedang Dibaca";
+            } else if (item.stok === 0) {
+                status = "Tidak Tersedia";
+            }
+
+            return {
+                id: item.id,
+                judulBuku: item.judulBuku,
+                pengarang: item.pengarang,
+                penerbit: item.penerbit,
+                thTerbit: item.thTerbit,
+                foto: item.foto
+                    ? `http://127.0.0.1:8000/storage/buku/${item.foto}`
+                    : "https://via.placeholder.com/150",
+                stok: item.stok,
+                kategori: item.kategori?.nama || "Tidak Ada Kategori",
+                status: status,
+            };
+        });
 
         setBooks(formatted);
         setLoading(false);
@@ -70,11 +95,11 @@ export default function UserBooks() {
 
                                 <td
                                     className={`ub-status ${
-                                        buku.status === "Dipinjam"
-                                            ? "ub-blue"
-                                            : buku.status === "Baca Sekarang"
-                                            ? "ub-green"
-                                            : "ub-gray"
+                                        buku.status === "Sedang Dibaca"
+                                            ? "ub-red"
+                                            : buku.status === "Tidak Tersedia"
+                                            ? "ub-gray"
+                                            : "ub-green"
                                     }`}
                                 >
                                     {buku.status}

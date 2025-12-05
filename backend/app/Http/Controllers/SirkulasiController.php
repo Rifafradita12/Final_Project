@@ -27,7 +27,7 @@ class SirkulasiController extends Controller
             return [
                 "no"         => $index + 1,
                 "id"         => $item->id,
-                "namaUser"   => $item->user ? $item->user->name : "-",
+                "namaUser"   => $item->user ? $item->user->nama : "-",
                 "tglPinjam"  => $item->tglPinjam,
                 "tglKembali" => $item->tglKembali,
                 "tglTempo"   => $item->tglTempo,
@@ -44,8 +44,8 @@ class SirkulasiController extends Controller
 
                 // Detail denda
                 "denda" => $item->denda ? [
-                    "jenis" => $item->denda->jenis,
-                    "harga" => $item->denda->harga
+                    "jumlah" => $item->denda->jumlah,
+                    "statusBayar" => $item->denda->statusBayar
                 ] : null,
             ];
         });
@@ -165,20 +165,45 @@ class SirkulasiController extends Controller
             ], 400);
         }
 
+        // Hitung denda jika terlambat
+        $denda_id = null;
+        $tglTempo = Carbon::parse($sirkulasi->tglTempo);
+        $tglKembali = Carbon::parse($sirkulasi->tglKembali);
+        
+        if ($tglKembali->gt($tglTempo)) {
+            // Hitung jumlah hari keterlambatan
+            $hariTerlambat = $tglKembali->diffInDays($tglTempo);
+            $dendaPerHari = 5000; // Rp 5000 per hari
+            $totalDenda = $hariTerlambat * $dendaPerHari;
+            
+            // Buat record denda
+            $denda = \App\Models\denda::create([
+                'jumlah' => $totalDenda,
+                'statusBayar' => 'belumBayar'
+            ]);
+            
+            $denda_id = $denda->id;
+        }
+
         // Tambah stok buku
         $buku = Buku::find($sirkulasi->buku_id);
         $buku->stok += 1;
         $buku->save();
 
-        // Update status menjadi kem (selesai dikembalikan)
+        // Update status menjadi kem (selesai dikembalikan) dan set denda_id
         $sirkulasi->update([
-            'status' => 'kem'
+            'status' => 'kem',
+            'denda_id' => $denda_id
         ]);
+
+        $message = $denda_id 
+            ? "Pengembalian buku disetujui. Terdapat denda keterlambatan!" 
+            : "Pengembalian buku telah disetujui!";
 
         return response()->json([
             "success" => true,
-            "message" => "Pengembalian buku telah disetujui!",
-            "data" => $sirkulasi
+            "message" => $message,
+            "data" => $sirkulasi->load('denda')
         ], 200);
     }
 
