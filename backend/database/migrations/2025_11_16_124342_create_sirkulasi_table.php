@@ -15,10 +15,11 @@ return new class extends Migration
             $table->id();
             $table->date('tglPinjam');
             $table->date('tglKembali')->nullable();
-            $table->enum('status', ['pin', 'kem']);
+            $table->enum('status', ['pin', 'kem', 'pending_return']);
             $table->date('tglTempo');
             $table->foreignId('buku_id')->constrained('buku')->onDelete('cascade');
             $table->foreignId('denda_id')->nullable()->constrained('denda')->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

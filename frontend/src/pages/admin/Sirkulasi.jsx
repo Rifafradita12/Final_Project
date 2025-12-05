@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { getSirkulasi } from "../../_services/sirkulasi";
+import { getSirkulasi, accKembali } from "../../_services/sirkulasi";
+import { CheckCircle } from "lucide-react";
 
 export default function Sirkulasi() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [processing, setProcessing] = useState(null);
 
     useEffect(() => {
         loadData();
@@ -18,6 +20,23 @@ export default function Sirkulasi() {
             setError("Gagal memuat data.");
         }
         setLoading(false);
+    };
+
+    const handleAccKembali = async (id) => {
+        if (!window.confirm("Setujui pengembalian buku ini?")) return;
+
+        setProcessing(id);
+
+        try {
+            await accKembali(id);
+            alert("Pengembalian buku telah disetujui!");
+            loadData();
+        } catch (error) {
+            alert(error.response?.data?.message || "Gagal mengsetujui pengembalian!");
+            console.error(error);
+        } finally {
+            setProcessing(null);
+        }
     };
 
     return (
@@ -52,12 +71,14 @@ export default function Sirkulasi() {
                         <thead className="bg-gray-50 border-b">
                             <tr>
                                 <th className="py-4 px-4 text-left font-semibold text-gray-600">No</th>
+                                <th className="py-4 px-4 text-left font-semibold text-gray-600">Nama User</th>
                                 <th className="py-4 px-4 text-left font-semibold text-gray-600">Tgl Pinjam</th>
                                 <th className="py-4 px-4 text-left font-semibold text-gray-600">Tgl Kembali</th>
                                 <th className="py-4 px-4 text-left font-semibold text-gray-600">Tempo</th>
                                 <th className="py-4 px-4 text-center font-semibold text-gray-600">Status</th>
                                 <th className="py-4 px-4 text-center font-semibold text-gray-600">Buku</th>
                                 <th className="py-4 px-4 text-center font-semibold text-gray-600">Denda</th>
+                                <th className="py-4 px-4 text-center font-semibold text-gray-600">Aksi</th>
                             </tr>
                         </thead>
 
@@ -65,7 +86,7 @@ export default function Sirkulasi() {
                             {data.length === 0 ? (
                                 <tr>
                                     <td
-                                        colSpan="7"
+                                        colSpan="9"
                                         className="py-6 text-center text-gray-500 italic"
                                     >
                                         Tidak ada data.
@@ -78,12 +99,13 @@ export default function Sirkulasi() {
                                         className="border-b hover:bg-gray-50 transition duration-200"
                                     >
                                         <td className="py-3 px-4">{index + 1}</td>
+                                        <td className="py-3 px-4 font-medium text-gray-800">{item.namaUser}</td>
                                         <td className="py-3 px-4">{item.tglPinjam}</td>
-                                        <td className="py-3 px-4">{item.tglKembali}</td>
+                                        <td className="py-3 px-4">{item.tglKembali ?? "-"}</td>
 
                                         <td
                                             className={`py-3 px-4 font-medium ${
-                                                item.tglTempo < item.tglKembali
+                                                item.tglTempo && item.tglKembali && item.tglTempo < item.tglKembali
                                                     ? "text-red-600"
                                                     : "text-gray-800"
                                             }`}
@@ -96,6 +118,8 @@ export default function Sirkulasi() {
                                                 className={`px-3 py-1 rounded-full text-xs font-semibold ${
                                                     item.status === "PINJAM"
                                                         ? "bg-blue-100 text-blue-700"
+                                                        : item.status === "MENUNGGU ACC"
+                                                        ? "bg-yellow-100 text-yellow-700"
                                                         : "bg-green-100 text-green-700"
                                                 }`}
                                             >
@@ -126,6 +150,21 @@ export default function Sirkulasi() {
                                                 </div>
                                             ) : (
                                                 <span>-</span>
+                                            )}
+                                        </td>
+
+                                        <td className="py-3 px-4 text-center">
+                                            {item.status === "MENUNGGU ACC" ? (
+                                                <button
+                                                    disabled={processing === item.id}
+                                                    onClick={() => handleAccKembali(item.id)}
+                                                    className="px-3 py-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white rounded text-xs font-semibold transition flex items-center gap-1 justify-center"
+                                                >
+                                                    <CheckCircle size={14} />
+                                                    {processing === item.id ? "Proses..." : "ACC"}
+                                                </button>
+                                            ) : (
+                                                <span className="text-gray-500 text-xs">-</span>
                                             )}
                                         </td>
                                     </tr>

@@ -34,6 +34,17 @@ export const kembalikanBuku = async (id) => {
     }
 };
 
+// ACC PENGEMBALIAN BUKU (Admin)
+export const accKembali = async (id) => {
+    try {
+        const res = await api.post(`/sirkulasi/acc/${id}`);
+        return res.data;
+    } catch (err) {
+        console.error("ERROR ACC KEMBALIKAN:", err);
+        throw err;
+    }
+};
+
 // GET detail sirkulasi
 export const getSirkulasiDetail = async (id) => {
     try {

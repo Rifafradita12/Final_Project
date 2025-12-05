@@ -15,6 +15,7 @@ class sirkulasi extends Model
         'tglTempo',
         'buku_id',
         'denda_id',
+        'user_id',
     ];
 
     public function buku()
@@ -24,5 +25,10 @@ class sirkulasi extends Model
     public function denda()
     {
         return $this->belongsTo(denda::class, 'denda_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

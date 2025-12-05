@@ -22,8 +22,11 @@ Route::apiResource('/sirkulasi', SirkulasiController::class);
 // PINJAM BUKU
 Route::post('/sirkulasi/pinjam', [SirkulasiController::class, 'pinjamBuku']);
 
-// KEMBALIKAN BUKU
+// KEMBALIKAN BUKU (user request return)
 Route::post('/sirkulasi/kembalikan/{id}', [SirkulasiController::class, 'kembalikanBuku']);
+
+// ACC KEMBALIKAN BUKU (admin approve)
+Route::post('/sirkulasi/acc/{id}', [SirkulasiController::class, 'accKembali']);
 
 Route::apiResource('/user', AuthController::class);
 

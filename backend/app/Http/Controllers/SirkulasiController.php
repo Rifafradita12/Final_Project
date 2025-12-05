@@ -12,7 +12,7 @@ class SirkulasiController extends Controller
 {
     public function index()
     {
-        $sirkulasi = Sirkulasi::with('buku', 'denda')->get();
+        $sirkulasi = Sirkulasi::with('buku', 'denda', 'user')->get();
 
         if ($sirkulasi->isEmpty()) {
             return response()->json([
@@ -27,10 +27,11 @@ class SirkulasiController extends Controller
             return [
                 "no"         => $index + 1,
                 "id"         => $item->id,
+                "namaUser"   => $item->user ? $item->user->name : "-",
                 "tglPinjam"  => $item->tglPinjam,
                 "tglKembali" => $item->tglKembali,
                 "tglTempo"   => $item->tglTempo,
-                "status"     => $item->status == "pin" ? "PINJAM" : "KEMBALI",
+                "status"     => $item->status == "pin" ? "PINJAM" : ($item->status == "pending_return" ? "MENUNGGU ACC" : "KEMBALI"),
 
                 // Detail buku
                 "buku" => $item->buku ? [
@@ -98,7 +99,8 @@ class SirkulasiController extends Controller
             'status'     => 'pin',
             'tglTempo'   => $tglTempo,
             'buku_id'    => $buku->id,
-            'denda_id'   => null
+            'denda_id'   => null,
+            'user_id'    => 2 // For now, hardcoded to user 2 for testing
         ]);
 
         return response()->json([
@@ -109,7 +111,7 @@ class SirkulasiController extends Controller
     }
 
     // ========================================================
-    // KEMBALIKAN BUKU (tambah stok, update status)
+    // KEMBALIKAN BUKU (set status pending_return, menunggu ACC admin)
     // ========================================================
     public function kembalikanBuku($id)
     {
@@ -129,20 +131,53 @@ class SirkulasiController extends Controller
             ], 400);
         }
 
+        // Update record sirkulasi ke pending_return (menunggu ACC admin)
+        $sirkulasi->update([
+            'tglKembali' => Carbon::today(),
+            'status'     => 'pending_return'
+        ]);
+
+        return response()->json([
+            "success" => true,
+            "message" => "Permintaan pengembalian buku telah dikirim. Menunggu persetujuan admin!",
+            "data" => $sirkulasi
+        ], 200);
+    }
+
+    // ========================================================
+    // ACC PENGEMBALIAN BUKU (Admin approves return)
+    // ========================================================
+    public function accKembali($id)
+    {
+        $sirkulasi = Sirkulasi::with('buku')->find($id);
+
+        if (!$sirkulasi) {
+            return response()->json([
+                "success" => false,
+                "message" => "Data sirkulasi tidak ditemukan"
+            ], 404);
+        }
+
+        if ($sirkulasi->status != "pending_return") {
+            return response()->json([
+                "success" => false,
+                "message" => "Hanya pengembalian yang menunggu ACC yang bisa disetujui!"
+            ], 400);
+        }
+
         // Tambah stok buku
         $buku = Buku::find($sirkulasi->buku_id);
         $buku->stok += 1;
         $buku->save();
 
-        // Update record sirkulasi
+        // Update status menjadi kem (selesai dikembalikan)
         $sirkulasi->update([
-            'tglKembali' => Carbon::today(),
-            'status'     => 'kem'
+            'status' => 'kem'
         ]);
 
         return response()->json([
             "success" => true,
-            "message" => "Buku berhasil dikembalikan!",
+            "message" => "Pengembalian buku telah disetujui!",
             "data" => $sirkulasi
         ], 200);
     }
