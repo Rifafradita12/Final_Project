@@ -13,6 +13,7 @@ export default function UserLayout() {
     const [open, setOpen] = useState(true);
     const location = useLocation();
     const user = JSON.parse(localStorage.getItem("user"));
+    console.log(user);
 
     const menu = [
         { name: "Dashboard", to: "/user", icon: <LayoutDashboard size={21} /> },
