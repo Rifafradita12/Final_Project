@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const url = "http://be-e-library-sibm3.karyakreasi.id";
-const url = "http://127.0.0.1:8000";
+const url = "https://be-e-library-sibm3.karyakreasi.id";
+// const url = "http://127.0.0.1:8000";
 
 // Buat satu instance axios saja
 const API = axios.create({

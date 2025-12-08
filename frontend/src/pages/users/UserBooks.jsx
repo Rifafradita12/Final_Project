@@ -44,7 +44,7 @@ export default function UserBooks() {
                 penerbit: item.penerbit,
                 thTerbit: item.thTerbit,
                 foto: item.foto
-                    ? `http://127.0.0.1:8000/storage/buku/${item.foto}`
+                    ? `https://be-e-library-sibm3.karyakreasi.id/storage/buku/${item.foto}`
                     : "https://via.placeholder.com/150",
                 stok: item.stok,
                 kategori: item.kategori?.nama || "Tidak Ada Kategori",

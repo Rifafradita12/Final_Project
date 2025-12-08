@@ -159,7 +159,7 @@ export default function UserChooseBooks() {
                         <img
                             src={
                                 selectedBook.foto
-                                    ? `http://127.0.0.1:8000/storage/buku/${selectedBook.foto}`
+                                    ? `https://be-e-library-sibm3.karyakreasi.id/storage/buku/${selectedBook.foto}`
                                     : "https://via.placeholder.com/150"
                             }
                             className="modal-img"
@@ -192,7 +192,7 @@ function BookCard({ buku, kategori, kategoriColor, onSelect }) {
             <img
                 src={
                     buku.foto
-                        ? `http://127.0.0.1:8000/storage/buku/${buku.foto}`
+                        ? `https://be-e-library-sibm3.karyakreasi.id/storage/buku/${buku.foto}`
                         : "https://via.placeholder.com/150"
                 }
                 className="book-img"
