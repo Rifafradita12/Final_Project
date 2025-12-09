@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { LayoutDashboard, Users, BookOpen, Repeat, LogOut } from "lucide-react";
 import "./AdminLayout.css";
+import Header from "./Header";
+import "./shared.css";
 
 export default function AdminLayout() {
     const [open, setOpen] = useState(true);
@@ -58,6 +60,7 @@ export default function AdminLayout() {
 
             {/* Content */}
             <main className={`content ${open ? "shifted" : "compact"}`}>
+                <Header onLogout={() => (window.location.href = "/login")} />
                 <div className="content-card">
                     <Outlet />
                 </div>

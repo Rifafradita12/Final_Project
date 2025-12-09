@@ -8,11 +8,37 @@ export default function UserHistories() {
     const [loading, setLoading] = useState(true);
     const [processing, setProcessing] = useState(null);
     const [accDetails, setAccDetails] = useState(null);
+    const [query, setQuery] = useState("");
+    const [statusFilter, setStatusFilter] = useState("");
+    const [page, setPage] = useState(1);
+    const perPage = 8;
 
     const loadData = async () => {
         try {
             const res = await API.get("/sirkulasi");
-            setData(res.data.data ?? []);
+            const all = res.data.data ?? [];
+
+            // Get current user from localStorage and filter sirkulasi
+            const userData = JSON.parse(localStorage.getItem("user") || "{}");
+            const userId = userData.id ?? userData.user_id ?? null;
+            const userName = userData.nama || userData.name || null;
+
+            const filtered = all.filter((item) => {
+                // support several possible shapes: item.user_id, item.user.id, item.namaUser
+                if (userId != null) {
+                    if (item.user_id != null && String(item.user_id) === String(userId)) return true;
+                    if (item.user && item.user.id != null && String(item.user.id) === String(userId)) return true;
+                }
+
+                if (userName) {
+                    if (item.namaUser && String(item.namaUser) === String(userName)) return true;
+                    if (item.user && (item.user.nama || item.user.name) && String(item.user.nama || item.user.name) === String(userName)) return true;
+                }
+
+                return false;
+            });
+
+            setData(filtered);
         } catch (error) {
             console.error(error);
         } finally {
@@ -27,6 +53,15 @@ export default function UserHistories() {
     const formatRupiah = (value) => {
         if (!value || value === "-") return "-";
         return "Rp " + value.toLocaleString("id-ID");
+    };
+
+    const formatDate = (d) => {
+        if (!d) return "-";
+        try {
+            return new Date(d).toLocaleDateString("id-ID", { year: 'numeric', month: 'short', day: 'numeric' });
+        } catch (e) {
+            return d;
+        }
     };
 
     const getStatusClass = (status) => {
@@ -61,6 +96,20 @@ export default function UserHistories() {
         return <div className="p-8 text-center text-gray-500">Loading...</div>;
     }
 
+    // filter and paginate data locally
+    const filtered = data
+        .filter((item) => {
+            if (statusFilter && item.status !== statusFilter) return false;
+            if (!query) return true;
+            const q = query.toLowerCase();
+            const title = typeof item.buku === 'object' ? (item.buku.judulBuku || "") : (item.buku || "");
+            const pengarang = typeof item.buku === 'object' ? (item.buku.pengarang || "") : "";
+            return title.toLowerCase().includes(q) || pengarang.toLowerCase().includes(q) || (item.namaUser || "").toLowerCase().includes(q);
+        });
+
+    const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
+    const paginated = filtered.slice((page - 1) * perPage, page * perPage);
+
     return (
         <div className="p-8 bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
             {/* HEADER */}
@@ -87,83 +136,106 @@ export default function UserHistories() {
                         </thead>
 
                         <tbody>
-                            {data.length === 0 ? (
+                            {filtered.length === 0 ? (
                                 <tr>
                                     <td colSpan="8" className="py-8 text-center text-gray-500">
                                         <div className="flex flex-col items-center justify-center">
                                             <BookOpen size={40} className="text-gray-300 mb-2" />
-                                            <p>Tidak ada riwayat peminjaman</p>
+                                                <p className="font-semibold mb-2">Tidak ada riwayat peminjaman</p>
+                                                <p className="text-sm text-gray-400">Belum ada transaksi. Coba pinjam buku sekarang.</p>
+                                                <a href="/user/buku" className="mt-3 inline-block px-4 py-2 bg-blue-600 text-white rounded">Lihat Buku</a>
                                         </div>
                                     </td>
                                 </tr>
-                            ) : (
-                                data.map((item, index) => (
-                                    <tr key={item.id || index} className="border-b border-gray-200 hover:bg-blue-50 transition">
-                                        <td className="py-3 px-4 text-gray-800">{index + 1}</td>
-                                        <td className="py-3 px-4 text-gray-700">{item.tglPinjam}</td>
-                                        <td className="py-3 px-4 text-gray-700">{item.tglKembali ?? "-"}</td>
-                                        <td className="py-3 px-4 font-semibold text-red-600">{item.tglTempo}</td>
+                                ) : (
+                                    // render paginated rows
+                                    paginated.map((item, idx) => (
+                                        <tr key={item.id || idx} className="border-b border-gray-200 hover:bg-blue-50 transition">
+                                            <td className="py-3 px-4 text-gray-800">{(page - 1) * perPage + idx + 1}</td>
+                                            <td className="py-3 px-4 text-gray-700">{formatDate(item.tglPinjam)}</td>
+                                            <td className="py-3 px-4 text-gray-700">{formatDate(item.tglKembali)}</td>
+                                            <td className="py-3 px-4 font-semibold text-red-600">{formatDate(item.tglTempo)}</td>
 
-                                        <td className="py-3 px-4">
-                                            <span className={`px-2 py-1 rounded-full text-xs font-bold ${getStatusClass(item.status)}`}>
-                                                {item.status}
-                                            </span>
-                                        </td>
-
-                                        <td className="py-3 px-4">
-                                            {typeof item.buku === 'object' ? (
-                                                <div>
-                                                    <p className="font-semibold text-gray-900 text-xs">{item.buku.judulBuku}</p>
-                                                    {item.buku.pengarang && (
-                                                        <p className="text-xs text-gray-500">{item.buku.pengarang}</p>
-                                                    )}
-                                                </div>
-                                            ) : <p className="font-semibold text-gray-900 text-xs">{item.buku}</p>}
-                                        </td>
-
-                                        <td className="py-3 px-4">
-                                            {item.denda ? (
-                                                <div className="bg-red-50 p-2 rounded border border-red-200 text-xs">
-                                                    <p className="font-bold text-red-700">{formatRupiah(item.denda.harga)}</p>
-                                                    {item.denda.jenis && (
-                                                        <p className="text-red-600">{item.denda.jenis}</p>
-                                                    )}
-                                                </div>
-                                            ) : (
-                                                <span className="inline-block px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-semibold border border-green-200">
-                                                    -
+                                            <td className="py-3 px-4">
+                                                <span className={`px-2 py-1 rounded-full text-xs font-bold ${getStatusClass(item.status)}`}>
+                                                    {item.status}
                                                 </span>
-                                            )}
-                                        </td>
+                                            </td>
 
-                                        <td className="py-3 px-4 text-center">
-                                            {item.status === "PINJAM" ? (
-                                                <button
-                                                    disabled={processing === item.id}
-                                                    onClick={() => handleKembalikan(item.id)}
-                                                    className="px-3 py-1 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white rounded text-xs font-semibold transition"
-                                                >
-                                                    {processing === item.id ? "Proses..." : "Kembalikan"}
-                                                </button>
-                                            ) : item.status === "MENUNGGU ACC" ? (
-                                                <div className="flex items-center gap-1 text-yellow-600 text-xs font-semibold">
-                                                    <AlertCircle size={14} />
-                                                    Menunggu
-                                                </div>
-                                            ) : (
-                                                <div className="flex items-center gap-1 text-green-600 text-xs font-semibold cursor-pointer" onClick={() => setAccDetails(item)}>
-                                                    <CheckCircle size={14} />
-                                                    Lihat Detail
-                                                </div>
-                                            )}
-                                        </td>
-                                    </tr>
-                                ))
-                            )}
+                                            <td className="py-3 px-4">
+                                                {typeof item.buku === 'object' ? (
+                                                    <div>
+                                                        <p className="font-semibold text-gray-900 text-sm">{item.buku.judulBuku}</p>
+                                                        {item.buku.pengarang && (
+                                                            <p className="text-xs text-gray-500">{item.buku.pengarang}</p>
+                                                        )}
+                                                    </div>
+                                                ) : <p className="font-semibold text-gray-900 text-sm">{item.buku}</p>}
+                                            </td>
+
+                                            <td className="py-3 px-4">
+                                                {item.denda ? (
+                                                    <div className="bg-red-50 p-2 rounded border border-red-200 text-xs">
+                                                        <p className="font-bold text-red-700">{formatRupiah(item.denda.harga)}</p>
+                                                        {item.denda.jenis && (
+                                                            <p className="text-red-600">{item.denda.jenis}</p>
+                                                        )}
+                                                    </div>
+                                                ) : (
+                                                    <span className="inline-block px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-semibold border border-green-200">
+                                                        -
+                                                    </span>
+                                                )}
+                                            </td>
+
+                                            <td className="py-3 px-4 text-center">
+                                                {item.status === "PINJAM" ? (
+                                                    <button
+                                                        disabled={processing === item.id}
+                                                        onClick={() => handleKembalikan(item.id)}
+                                                        className="px-3 py-1 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white rounded text-xs font-semibold transition"
+                                                    >
+                                                        {processing === item.id ? "Proses..." : "Kembalikan"}
+                                                    </button>
+                                                ) : item.status === "MENUNGGU ACC" ? (
+                                                    <div className="flex items-center gap-1 text-yellow-600 text-xs font-semibold">
+                                                        <AlertCircle size={14} />
+                                                        Menunggu
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex items-center gap-1 text-green-600 text-xs font-semibold cursor-pointer" onClick={() => setAccDetails(item)}>
+                                                        <CheckCircle size={14} />
+                                                        Lihat Detail
+                                                    </div>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
                         </tbody>
                     </table>
                 </div>
             </div>
+
+                {/* Table controls: search, filter, pagination */}
+                <div className="mt-4 flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                        <input value={query} onChange={(e) => { setQuery(e.target.value); setPage(1); }} placeholder="Cari judul atau pengarang..." className="px-3 py-2 border rounded-md" />
+
+                        <select value={statusFilter} onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }} className="px-3 py-2 border rounded-md">
+                            <option value="">Semua Status</option>
+                            <option value="PINJAM">PINJAM</option>
+                            <option value="MENUNGGU ACC">MENUNGGU ACC</option>
+                            <option value="KEMBALI">KEMBALI</option>
+                        </select>
+                    </div>
+
+                    <div className="pagination">
+                        <button onClick={() => setPage((p) => Math.max(1, p - 1))} className="px-3 py-1 border rounded">Prev</button>
+                        <span className="px-3">{page} / {totalPages}</span>
+                        <button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} className="px-3 py-1 border rounded">Next</button>
+                    </div>
+                </div>
 
             {/* SUMMARY SECTION */}
             {data.length > 0 && (

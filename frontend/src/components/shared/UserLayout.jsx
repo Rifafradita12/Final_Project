@@ -8,6 +8,8 @@ import {
     LogOut
 } from "lucide-react";
 import "./UserLayout.css";
+import Header from "./Header";
+import "./shared.css";
 
 export default function UserLayout() {
     const [open, setOpen] = useState(true);
@@ -67,6 +69,7 @@ export default function UserLayout() {
 
             {/* CONTENT */}
             <main className={`content ${open ? "shifted" : "compact"}`}>
+                <Header onLogout={() => (window.location.href = "/login")} />
                 <div className="content-card">
                     <Outlet />
                 </div>

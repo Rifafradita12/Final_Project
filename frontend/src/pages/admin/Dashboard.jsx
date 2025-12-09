@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getDashboard } from "../../_services/dashboard";
 import "./Dashbord.css";
+import StatCard from "../../components/shared/StatCard";
 
 export default function AdminDashboard() {
     const [loading, setLoading] = useState(true);
@@ -36,32 +37,11 @@ export default function AdminDashboard() {
                 Selamat datang! Berikut ringkasan aktivitas perpustakaan.
             </p>
 
-            <div className="dashboard-grid">
-
-                <DashboardCard
-                    title="Total User"
-                    value={stats.total_user}
-                    color="card-blue"
-                />
-
-                <DashboardCard
-                    title="Total Buku"
-                    value={stats.total_buku}
-                    color="card-purple"
-                />
-
-                <DashboardCard
-                    title="Sedang Dipinjam"
-                    value={stats.total_dipinjam}
-                    color="card-orange"
-                />
-
-                <DashboardCard
-                    title="Sudah Dikembalikan"
-                    value={stats.total_dikembalikan}
-                    color="card-green"
-                />
-
+            <div className="stat-grid">
+                <StatCard title="Total User" value={stats.total_user} color="blue" />
+                <StatCard title="Total Buku" value={stats.total_buku} color="purple" />
+                <StatCard title="Sedang Dipinjam" value={stats.total_dipinjam} color="orange" />
+                <StatCard title="Sudah Dikembalikan" value={stats.total_dikembalikan} color="green" />
             </div>
         </div>
     );

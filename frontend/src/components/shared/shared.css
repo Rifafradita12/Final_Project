@@ -1,0 +1,49 @@
+:root{
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --muted: #6b7280;
+    --primary: #2563eb;
+    --accent: #7c3aed;
+    --success: #10b981;
+    --danger: #ef4444;
+}
+
+.app-header{
+    height:64px;
+    background: linear-gradient(90deg,var(--card), #f1f5f9);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 18px;
+    border-bottom:1px solid rgba(0,0,0,0.04);
+}
+.header-left{display:flex;gap:14px;align-items:center}
+.app-title{font-weight:700;color:var(--primary);margin:0}
+.search-box{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.03);padding:6px 10px;border-radius:8px}
+.search-box input{border:none;outline:none;background:transparent;width:220px}
+.header-right{display:flex;align-items:center;gap:12px}
+.user-info{display:flex;align-items:center;gap:8px}
+.avatar{width:36px;height:36px;border-radius:999px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
+.user-meta{font-size:12px;color:var(--muted)}
+.btn-logout{background:transparent;border:0;padding:6px;border-radius:8px;cursor:pointer}
+
+/* content wrapper tweaks used by layouts */
+.content .content-card{padding:24px;background:var(--bg);min-height:calc(100vh - 64px)}
+
+/* Stat cards */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:18px}
+.stat-card{display:flex;align-items:center;gap:12px;padding:16px;border-radius:12px;background:linear-gradient(180deg,var(--card),#fff);box-shadow:0 4px 10px rgba(16,24,40,0.04);border:1px solid rgba(0,0,0,0.04)}
+.stat-icon{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.04);color:var(--primary)}
+.stat-title{margin:0;font-size:12px;color:var(--muted)}
+.stat-value{margin:0;font-size:22px;font-weight:700}
+.stat-card.blue .stat-icon{background:linear-gradient(90deg,rgba(37,99,235,0.12),rgba(37,99,235,0.06));color:var(--primary)}
+.stat-card.green .stat-icon{background:linear-gradient(90deg,rgba(16,185,129,0.12),rgba(16,185,129,0.06));color:var(--success)}
+.stat-card.purple .stat-icon{background:linear-gradient(90deg,rgba(124,58,237,0.12),rgba(124,58,237,0.06));color:var(--accent)}
+.stat-card.orange .stat-icon{background:linear-gradient(90deg,rgba(249,115,22,0.12),rgba(249,115,22,0.06));color:#f97316}
+
+/* table and pagination tweaks for sirkulasi */
+.table-controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.table-wrapper{border-top:1px solid rgba(0,0,0,0.04)}
+.pagination{display:flex;align-items:center;gap:8px}
+.empty-card{padding:32px;border-radius:12px;background:linear-gradient(180deg,#fff,#fbfdff);box-shadow:0 6px 18px rgba(2,6,23,0.04);text-align:center}
+.modal-box{max-width:420px}

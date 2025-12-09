@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getKategori } from "../../_services/kategori";
+import { getSirkulasi } from "../../_services/sirkulasi";
 import {
     BookOpen,
     Layers,
@@ -8,6 +9,7 @@ import {
     BookmarkCheck,
     BookCopy,
 } from "lucide-react";
+import StatCard from "../../components/shared/StatCard";
 
 import API from "../../_api";
 import "./UserDashboard.css";
@@ -21,7 +23,34 @@ export default function UserDashboard() {
         const loadStats = async () => {
             try {
                 const res = await API.get("/dashboard");
-                setStats(res.data.data);
+                const apiStats = res.data.data;
+
+                // compute user-specific "Selesai Dibaca"
+                const sirkulasiData = await getSirkulasi();
+                const userData = JSON.parse(localStorage.getItem("user") || "{}");
+                const userId = userData.id ?? userData.user_id ?? null;
+                const userName = userData.nama || userData.name || null;
+
+                const totalDikembalikanUser = sirkulasiData.filter((item) => {
+                    const isUser = (() => {
+                        if (userId != null) {
+                            if (item.user_id != null && String(item.user_id) === String(userId)) return true;
+                            if (item.user && item.user.id != null && String(item.user.id) === String(userId)) return true;
+                        }
+
+                        if (userName) {
+                            if (item.namaUser && String(item.namaUser) === String(userName)) return true;
+                            if (item.user && (item.user.nama || item.user.name) && String(item.user.nama || item.user.name) === String(userName)) return true;
+                        }
+
+                        return false;
+                    })();
+
+                    return isUser && item.status === "KEMBALI";
+                }).length;
+
+                // override the total_dikembalikan with user-specific count
+                setStats({ ...apiStats, total_dikembalikan: totalDikembalikanUser });
 
                 const kategoriData = await getKategori();
                 setKategori(kategoriData);
@@ -54,12 +83,12 @@ export default function UserDashboard() {
                 </p>
             </div>
 
-            <div className="stats-grid">
-                <StatCard title="Total Buku" value={stats.total_buku} icon={BookCopy} color="blue" />
-                <StatCard title="Dipinjam" value={stats.total_dipinjam} icon={BookOpen} color="green" />
-                <StatCard title="Total User" value={stats.total_user} icon={Layers} color="orange" />
-                <StatCard title="Selesai Dibaca" value={stats.total_dikembalikan} icon={BookmarkCheck} color="purple" />
-            </div>
+                    <div className="stat-grid">
+                        <StatCard title="Total Buku" value={stats.total_buku} icon={BookCopy} color="blue" />
+                        <StatCard title="Dipinjam" value={stats.total_dipinjam} icon={BookOpen} color="green" />
+                        <StatCard title="Total User" value={stats.total_user} icon={Layers} color="orange" />
+                        <StatCard title="Selesai Dibaca" value={stats.total_dikembalikan} icon={BookmarkCheck} color="purple" />
+                    </div>
 
             <div className="menu-grid">
                 {menu.map((item, i) => {
@@ -74,20 +103,6 @@ export default function UserDashboard() {
                         </a>
                     );
                 })}
-            </div>
-        </div>
-    );
-}
-
-function StatCard({ title, value, icon: Icon, color }) {
-    return (
-        <div className="stat-card">
-            <div className={`icon-box ${color}`}>
-                <Icon size={26} />
-            </div>
-            <div>
-                <p className="stat-title">{title}</p>
-                <h2 className="stat-value">{value}</h2>
             </div>
         </div>
     );
